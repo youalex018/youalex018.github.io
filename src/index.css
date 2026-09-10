@@ -1,0 +1,440 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
+  --font-sans: "Instrument Sans", "Gill Sans", "Trebuchet MS", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-dawn-gold: #fde68a;
+  --color-dawn-ember: #fb923c;
+  --color-sky-cerulean: #38bdf8;
+  --color-sky-deep: #0284c7;
+  --color-meso: #1e1b4b;
+  --color-void: #030712;
+}
+
+:root {
+  --progress: 0;
+  --chrome-ink: #1c1917;
+  --chrome-muted: #57534e;
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+  scroll-padding-bottom: 5rem;
+}
+
+section[id] {
+  scroll-margin-top: 4.5rem;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: #fde68a;
+  color: #1c1917;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+.btn-solid {
+  background: var(--ink);
+  color: var(--on-ink);
+  border: 0;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid color-mix(in oklab, var(--ink) 30%, transparent);
+}
+
+::selection {
+  background: color-mix(in oklab, #f59e0b 45%, white);
+  color: #1c1917;
+}
+
+[data-theme="light"] {
+  --panel: rgba(255, 250, 240, 0.5);
+  --panel-border: rgba(28, 25, 23, 0.12);
+  --ink: #1c1917;
+  --ink-muted: #44403c;
+  --on-ink: #fff7ed;
+  --glow: rgba(251, 146, 60, 0.4);
+}
+
+[data-theme="dark"] {
+  --panel: rgba(8, 12, 28, 0.46);
+  --panel-border: rgba(248, 250, 252, 0.16);
+  --ink: #f8fafc;
+  --ink-muted: #e2e8f0;
+  --on-ink: #0b1220;
+  --glow: rgba(167, 139, 250, 0.4);
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 80;
+  padding: 0.65rem 1rem;
+  border-radius: 999px;
+  background: #1c1917;
+  color: #fde68a;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 40, "WONK" 0.8;
+}
+
+.glass {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--panel-border), transparent 35%),
+    0 28px 60px -28px rgb(0 0 0 / 0.28);
+}
+
+.sky-strip {
+  height: 500vh;
+  width: 100%;
+  transform: translate3d(0, calc(var(--progress) * -400vh), 0);
+  will-change: transform;
+  background: linear-gradient(
+    to bottom,
+    #fde68a 0%,
+    #fcd34d 5%,
+    #fbbf24 9%,
+    #fb923c 13%,
+    #fdba74 16%,
+    #fef3c7 19%,
+    #bae6fd 23%,
+    #7dd3fc 28%,
+    #38bdf8 35%,
+    #0284c7 44%,
+    #0369a1 52%,
+    #1e3a8a 58%,
+    #1e1b4b 68%,
+    #0f172a 82%,
+    #030712 100%
+  );
+}
+
+.sun-orb {
+  opacity: clamp(0, calc(1.05 - var(--progress) * 3.4), 1);
+  transform: translate3d(calc(var(--progress) * 8vw), calc(var(--progress) * 18vh), 0);
+}
+
+/* Cloud bands: 200% wide, two identical halves, transform-only loop. */
+.cloud-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  width: 200%;
+  will-change: transform;
+  animation: cloud-loop linear infinite;
+}
+
+.cloud-speed-far {
+  animation-duration: 140s;
+}
+
+.cloud-speed-mid {
+  animation-duration: 95s;
+}
+
+.cloud-speed-near {
+  animation-duration: 65s;
+}
+
+.cloud-speed-strato {
+  animation-duration: 150s;
+}
+
+.cloud-speed-strato-wisp {
+  animation-duration: 185s;
+  animation-direction: reverse;
+}
+
+.cloud-speed-meso {
+  animation-duration: 160s;
+}
+
+.cloud-speed-meso-wisp {
+  animation-duration: 200s;
+  animation-direction: reverse;
+}
+
+.cumulus {
+  position: absolute;
+  height: auto;
+  overflow: visible;
+}
+
+/* Intro clouds fully opaque at the top, then fade out through troposphere. */
+.cloud-top {
+  opacity: clamp(0, calc(1.05 - var(--progress) * 4.2), 1);
+  transform: translate3d(0, calc(var(--progress) * -18vh), 0);
+}
+
+.cloud-mid {
+  opacity: clamp(0, calc(1.05 - var(--progress) * 4.8), 1);
+  transform: translate3d(0, calc(var(--progress) * -36vh), 0);
+}
+
+.cloud-near {
+  opacity: clamp(0, calc(1.02 - var(--progress) * 5.4), 1);
+  transform: translate3d(0, calc(var(--progress) * -72vh), 0);
+}
+
+.cloud-strato {
+  opacity: calc(
+    min(1, max(0, (var(--progress) - 0.12) * 8)) *
+    min(1, max(0, (0.48 - var(--progress)) * 7))
+  );
+  transform: translate3d(0, calc((var(--progress) - 0.2) * -16vh), 0);
+}
+
+.cloud-strato-wisp {
+  opacity: calc(
+    min(0.92, max(0, (var(--progress) - 0.14) * 7)) *
+    min(0.92, max(0, (0.5 - var(--progress)) * 6))
+  );
+  transform: translate3d(0, calc((var(--progress) - 0.2) * -10vh), 0);
+}
+
+.cloud-meso {
+  opacity: calc(
+    min(1, max(0, (var(--progress) - 0.32) * 7)) *
+    min(1, max(0, (0.68 - var(--progress)) * 6))
+  );
+  transform: translate3d(0, calc((var(--progress) - 0.4) * -18vh), 0);
+}
+
+.cloud-meso-wisp {
+  opacity: calc(
+    min(0.9, max(0, (var(--progress) - 0.34) * 6)) *
+    min(0.9, max(0, (0.72 - var(--progress)) * 5))
+  );
+  transform: translate3d(0, calc((var(--progress) - 0.4) * -10vh), 0);
+}
+
+.cirrus {
+  opacity: calc(
+    min(1, max(0, (var(--progress) - 0.12) * 8)) *
+    min(1, max(0, (0.62 - var(--progress)) * 6))
+  );
+  transform: translate3d(calc(var(--progress) * 6vw), calc(var(--progress) * -120px), 0);
+}
+
+.horizon-arc {
+  opacity: calc(
+    min(1, max(0, (var(--progress) - 0.14) * 9)) *
+    min(1, max(0, (0.42 - var(--progress)) * 8))
+  );
+}
+
+.aurora-veil {
+  opacity: calc(
+    min(1, max(0, (var(--progress) - 0.52) * 8)) *
+    min(1, max(0, (0.88 - var(--progress)) * 7))
+  );
+}
+
+.nebula-field {
+  opacity: min(1, max(0, (var(--progress) - 0.72) * 5.5));
+}
+
+.escape-banner {
+  opacity: min(1, max(0, (var(--progress) - 0.965) * 40));
+  transform: translateY(calc((1 - min(1, max(0, (var(--progress) - 0.965) * 40))) * 12px));
+}
+
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+}
+
+.reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+.meter-needle {
+  top: calc((1 - var(--progress)) * 100%);
+}
+
+.meter-needle-x {
+  left: calc(var(--progress) * 100%);
+}
+
+.drift-slow {
+  animation: drift 42s linear infinite;
+}
+
+.drift-med {
+  animation: drift 28s linear infinite reverse;
+}
+
+.orbit-sat {
+  animation: orbit 28s linear infinite;
+}
+
+.balloon-rise {
+  transform: translate3d(0, calc(var(--progress) * -18vh), 0);
+}
+
+.starlight-glow:hover,
+.starlight-glow:focus-visible {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--glow), white 20%),
+    0 0 36px var(--glow),
+    0 24px 50px -24px rgb(0 0 0 / 0.4);
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-8%, -4%, 0);
+  }
+}
+
+@keyframes cloud-loop {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes orbit {
+  from {
+    transform: rotate(0deg) translateX(9rem) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(9rem) rotate(-360deg);
+  }
+}
+
+@keyframes pulse-cue {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(8px);
+    opacity: 1;
+  }
+}
+
+.scroll-cue-dot {
+  animation: pulse-cue 2.2s ease-in-out infinite;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--ink, #f8fafc) 80%, #38bdf8);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .glass {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-padding-bottom: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .sky-strip,
+  .sun-orb,
+  .cloud-top,
+  .cloud-mid,
+  .cloud-near,
+  .cloud-strato,
+  .cloud-strato-wisp,
+  .cloud-meso,
+  .cloud-meso-wisp,
+  .cirrus,
+  .balloon-rise,
+  .escape-banner {
+    transform: none !important;
+  }
+
+  .cloud-band,
+  .drift-slow,
+  .drift-med,
+  .orbit-sat,
+  .scroll-cue-dot {
+    animation: none !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
