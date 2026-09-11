@@ -2,18 +2,20 @@
   "_comment": "PLACEHOLDER — replace fields with your real content. Do not change keys.",
   "name": "Alex You",
   "shortName": "Alex",
-  "title": "Computer Engineering Student at University of Toronto",
+  "title": "Computer Engineering Student at the University of Toronto",
   "location": "Earth, troposphere",
-  "pitch": "I build interfaces that carry weather — products with a pulse, systems that stay calm under pressure, and software people feel before they can name why.",
-  "email": "hello@example.com",
+  "email": "alex.you0825@gmail.com",
+  "emails": [
+    { "label": "Personal", "address": "alex.you0825@gmail.com" },
+    { "label": "UofT", "address": "alex.you@mail.utoronto.ca" }
+  ],
   "resumeUrl": "/resume.pdf",
-  "formEndpoint": "https://formspree.io/f/YOUR_FORM_ID",
   "ctas": [
     { "label": "Ascend to work", "href": "#mesosphere", "primary": true },
     { "label": "Make contact", "href": "#exosphere", "primary": false }
   ],
   "philosophy": {
-    "lede": "\"TODO\"",
+    "lede": "“Reach for the stars, so if you fall you land on a cloud”",
     "body": "TODO",
     "drive": "TODO"
   },

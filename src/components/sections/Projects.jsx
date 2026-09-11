@@ -11,7 +11,7 @@ export function Projects() {
       <div className="mx-auto w-full max-w-6xl">
         <Reveal>
           <p className="m-0 font-mono text-[0.68rem] uppercase tracking-[0.28em]" style={{ color: 'var(--ink-muted)' }}>
-            Mesosphere · Selected work
+            Mesosphere
           </p>
           <h2
             className="display mt-3 mb-10 max-w-[14ch] text-[clamp(2.4rem,6vw,4.4rem)] leading-[0.94] font-medium"

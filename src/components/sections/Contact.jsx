@@ -4,7 +4,6 @@ import { GlassPanel } from '../ui/GlassPanel';
 import { Reveal } from '../ui/Reveal';
 import { Section } from '../ui/Section';
 import { Constellation } from './Constellation';
-import { ContactForm } from './ContactForm';
 
 export function Contact() {
   return (
@@ -21,10 +20,23 @@ export function Contact() {
             Reach out
           </h2>
           <p className="mb-8 max-w-[40ch] leading-relaxed" style={{ color: 'var(--ink-muted)' }}>
-            I'm alway down to discuss anything or just chat! 
+            I'm always down to discuss anything or just chat!
           </p>
-          <GlassPanel className="p-6 sm:p-8">
-            <ContactForm />
+          <GlassPanel className="grid gap-3 p-6 sm:p-8">
+            {profile.emails.map((item) => (
+              <a
+                key={item.address}
+                href={`mailto:${item.address}`}
+                className="btn-ghost focus-ring starlight-glow flex items-center justify-between gap-4 rounded-2xl px-4 py-3 no-underline"
+              >
+                <span className="font-mono text-[0.65rem] uppercase tracking-[0.18em]" style={{ color: 'var(--ink-muted)' }}>
+                  {item.label}
+                </span>
+                <span className="text-[0.95rem]" style={{ color: 'var(--ink)' }}>
+                  {item.address}
+                </span>
+              </a>
+            ))}
           </GlassPanel>
         </Reveal>
 
