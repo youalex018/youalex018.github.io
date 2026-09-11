@@ -4,6 +4,7 @@ import { jumpTo } from '../../lib/jump';
 import socials from '../../data/socials.json';
 
 const LINKS = [
+  { id: 'troposphere', label: 'Alex You' },
   { id: 'stratosphere', label: 'About me' },
   { id: 'thermosphere', label: 'Experience' },
   { id: 'mesosphere', label: 'Projects' },
