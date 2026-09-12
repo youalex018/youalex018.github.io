@@ -1,26 +1,14 @@
 import { useEffect } from 'react';
-import { inkForProgress } from '../lib/color';
+import { applyProgress, scrollProgressFromY } from '../lib/progress';
 
-export function useScrollProgress(progressRef) {
+export function useScrollProgress(progressRef, enabled = true) {
   useEffect(() => {
+    if (!enabled) return undefined;
+
     let frame = 0;
 
-    let lastInk = '';
-
     const update = () => {
-      const doc = document.documentElement;
-      const max = doc.scrollHeight - window.innerHeight;
-      const next = max > 0 ? window.scrollY / max : 0;
-      const clamped = Math.min(1, Math.max(0, next));
-      progressRef.current = clamped;
-      doc.style.setProperty('--progress', clamped.toFixed(4));
-      const { ink, muted } = inkForProgress(clamped);
-      // Ink only changes across a narrow band; skip the write otherwise.
-      if (ink !== lastInk) {
-        lastInk = ink;
-        doc.style.setProperty('--chrome-ink', ink);
-        doc.style.setProperty('--chrome-muted', muted);
-      }
+      applyProgress(scrollProgressFromY(window.scrollY), progressRef);
     };
 
     const onScroll = () => {
@@ -40,5 +28,5 @@ export function useScrollProgress(progressRef) {
       window.removeEventListener('resize', onScroll);
       if (frame) cancelAnimationFrame(frame);
     };
-  }, [progressRef]);
+  }, [progressRef, enabled]);
 }

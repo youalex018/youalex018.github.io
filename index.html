@@ -6,8 +6,8 @@
   <link rel="icon" href="/logo.svg" type="image/svg+xml" />
   <link rel="icon" href="/logo.png" type="image/png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0284C7" />
-  <meta name="description" content="Alex You — a scroll-ascent portfolio through Earth's atmosphere, from golden-hour ground to deep space." />
+  <meta name="theme-color" content="#030712" />
+  <meta name="description" content="Alex You's Computer Engineering Portfolio'" />
   <title>Alex You | Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -18,6 +18,26 @@
 </head>
 
 <body>
+  <script>
+    (function () {
+      var DEFAULT_MODE = 'orbit';
+      var STORAGE_KEY = 'alex:view-mode';
+      var params = new URLSearchParams(location.search);
+      var fromUrl = params.get('view');
+      var mode = fromUrl === 'ascent' || fromUrl === 'orbit' ? fromUrl : null;
+      if (!mode) {
+        try { mode = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+      }
+      if (mode !== 'ascent' && mode !== 'orbit') mode = DEFAULT_MODE;
+      document.documentElement.dataset.mode = mode;
+      if (mode === 'orbit') {
+        /* Keep in sync with COCKPIT_PROGRESS in src/data/modes.js */
+        document.documentElement.style.setProperty('--progress', '0.82');
+        document.documentElement.style.setProperty('--chrome-ink', '#f8fafc');
+        document.documentElement.style.setProperty('--chrome-muted', '#e2e8f0');
+      }
+    })();
+  </script>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
   <script type="module" src="/src/index.jsx"></script>

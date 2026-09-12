@@ -3,6 +3,7 @@ import { LAYERS } from '../../data/layers';
 import { useActiveLayer } from '../../hooks/useActiveLayer';
 import { formatAltitude, progressToAltitude } from '../../lib/altitude';
 import { jumpTo } from '../../lib/jump';
+import { ModeToggle } from './ModeToggle';
 
 export function AltitudeMeter({ progressRef }) {
   const readoutRef = useRef(null);
@@ -101,7 +102,10 @@ export function AltitudeMeter({ progressRef }) {
       >
         <div className="mb-2 flex items-end justify-between gap-3 font-mono text-[0.62rem] uppercase tracking-[0.16em]">
           <span>{activeLayer.label}</span>
-          <span ref={mobileReadoutRef}>0.0 km</span>
+          <div className="flex items-center gap-2">
+            <span ref={mobileReadoutRef}>0.0 km</span>
+            <ModeToggle compact />
+          </div>
         </div>
         <div className="relative mx-2 h-8">
           <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-current/30" />
