@@ -3,43 +3,37 @@
     {
       "id": "td-2026",
       "date": "May 2026 — Aug 2026",
-      "role": "Data Analyst Intern, AI Tools and Software Development",
-      "org": "TD Bank · Toronto, ON",
+      "role": "Data Analyst Intern",
+      "org": "TD Bank",
       "highlights": [
-        "Led full-stack development of an internal timesheet platform in Python and FastAPI, replacing a legacy system, onboarding 100+ managers, and identifying over 10k mismatched hours.",
-        "Optimized a COBOL root-cause analysis chatbot on an Azure OpenAI VM to speed up enterprise debugging.",
-        "Built a Playwright prompt-versioning tool for audit verification and demoed the product to 20+ managers."
+        "Internal AI tooling development"
       ]
     },
     {
       "id": "autoronto-2025",
       "date": "Sep 2025 — Apr 2026",
       "role": "Hardware Engineer",
-      "org": "aUToronto (UofT Autonomous Driving Team) · Toronto, ON",
+      "org": "aUToronto",
       "highlights": [
-        "Directed electrical maintenance for an award-winning autonomous vehicle, with a focus on power regulation for high-precision sensor suites.",
-        "Designed high-reliability control boards in Altium and performed precision soldering for safety-critical modules."
+        "Electrical maintenance for a self-driving car"
       ]
     },
     {
       "id": "alink-2025",
       "date": "May 2025 — Aug 2025",
       "role": "Software Developer Intern",
-      "org": "ALink Computer Solutions Inc. · London, ON",
+      "org": "ALink Computer Solutions Inc.",
       "highlights": [
-        "Fine-tuned CNN models on an Ubuntu GPU server with TensorFlow, reaching 98% test accuracy on diseased-crop classification.",
-        "Shipped full-stack features in TypeScript, Java Spring Boot, and MySQL, including a Next.js PWA for inventory and shipment tracking.",
-        "Closed 50+ Jira issues using Agile and Git branching in a Jira/Bitbucket workflow."
+        "Full-stack apps and CNN fine-tuning for diseased crop classification"
       ]
     },
     {
       "id": "rsx-2024",
       "date": "Sep 2024 — Aug 2025",
       "role": "Embedded Software Engineer",
-      "org": "Robotics for Space Exploration (UofT Mars Rover Team) · Toronto, ON",
+      "org": "Robotics for Space Exploration",
       "highlights": [
-        "Wrote bare-metal C firmware on STM32 to control power distribution for a semi-autonomous rover over SPI.",
-        "Designed and soldered multilayer KiCad power boards with the firmware and debugged power-efficiency issues at the hardware–software boundary."
+        "PCB design and C firmware to control rover power distribution"
       ]
     }
   ]

@@ -2,10 +2,10 @@
   "items": [
     {
       "id": "edge-ai-voice",
-      "title": "Edge AI Voice Controller",
+      "title": "Edge AI Voice Activated Light",
       "kicker": "Firmware / edge AI",
       "summary": "On-device voice control on an ESP32-S3: 16 kHz I2S capture with DMA ping-pong buffers, prioritized FreeRTOS tasks, integer RMS voice-activity detection, and an INT8 keyword CNN.",
-      "impact": "Local WiFi/UDP lighting and GPIO actuation, a UART diagnostics CLI, microsecond profiling, and DMA/stack telemetry — no cloud in the loop.",
+      "impact": "Local WiFi/UDP lighting and GPIO actuation, a UART diagnostics CLI, microsecond profiling, and DMA/stack telemetry. No cloud in the loop.",
       "tech": ["C", "ESP32-S3", "ESP-IDF", "FreeRTOS", "I2S/DMA"],
       "repoUrl": "https://github.com/youalex018/jarvis-jr",
       "year": "Jul-Sep 2026"
@@ -25,7 +25,7 @@
       "title": "RISC-V Sonar Plotter",
       "kicker": "Embedded / RISC-V",
       "summary": "Bare-metal sonar in C on a Nios V (RISC-V) processor: concurrent stepper-motor control and hardware timers through memory-mapped I/O, without an RTOS.",
-      "impact": "A custom state machine mixing polling and interrupts captured time-of-flight past single-edge GPIO limits and drove a synchronized 60 Hz VGA radar display.",
+      "impact": "Custom state machine mixing polling and interrupts captured time-of-flight past single-edge GPIO limits and drove a synchronized 60 Hz VGA radar display.",
       "tech": ["C", "Nios V", "MMIO", "VGA"],
       "repoUrl": "https://github.com/youalex018/DE1-sonar",
       "year": "Mar-Apr 2026"

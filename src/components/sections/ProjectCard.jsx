@@ -1,3 +1,4 @@
+import { GitHubIcon } from '../chrome/SocialIcons';
 import { Badge } from '../ui/Badge';
 import { GlassPanel } from '../ui/GlassPanel';
 
@@ -48,12 +49,13 @@ export function ProjectCard({ project, featured = false }) {
             {project.repoUrl ? (
               <a
                 href={project.repoUrl}
-                className="focus-ring"
+                className="focus-ring inline-flex items-center gap-1.5"
                 style={{ color: 'var(--ink-muted)' }}
                 target="_blank"
                 rel="noreferrer"
               >
-                Repository
+                <GitHubIcon size={14} />
+                Repo
               </a>
             ) : null}
           </div>
