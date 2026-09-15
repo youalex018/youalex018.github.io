@@ -6,16 +6,16 @@
       "role": "Data Analyst Intern",
       "org": "TD Bank",
       "highlights": [
-        "Led the full-stack development of multiple internal tools"
+        "Internal AI tooling development"
       ]
     },
     {
       "id": "autoronto-2025",
       "date": "Sep 2025 — Apr 2026",
       "role": "Hardware Engineer",
-      "org": "aUToronto (UofT Autonomous Driving Team)",
+      "org": "aUToronto",
       "highlights": [
-        "Handled electrical maintenance for an award-winning autonomous vehicle"
+        "Electrical maintenance for a self-driving car"
       ]
     },
     {
@@ -24,16 +24,16 @@
       "role": "Software Developer Intern",
       "org": "ALink Computer Solutions Inc.",
       "highlights": [
-        "Shipped full-stack apps and fine-tuned CNN models for diseased crop classification"
+        "Full-stack apps and CNN fine-tuning for diseased crop classification"
       ]
     },
     {
       "id": "rsx-2024",
       "date": "Sep 2024 — Aug 2025",
       "role": "Embedded Software Engineer",
-      "org": "Robotics for Space Exploration (UofT Mars Rover Team)",
+      "org": "Robotics for Space Exploration",
       "highlights": [
-        "PCB design and C firmware to control power distribution"
+        "PCB design and C firmware to control rover power distribution"
       ]
     }
   ]

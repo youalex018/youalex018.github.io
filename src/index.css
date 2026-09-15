@@ -453,6 +453,7 @@ html[data-mode="orbit"] .horizon-limb {
   grid-template-columns: 1fr 1fr;
   padding: 3px;
   border-radius: 999px;
+  color: var(--ink, #f8fafc);
 }
 
 .seg-indicator {
@@ -481,7 +482,8 @@ html[data-mode="orbit"] .horizon-limb {
   font-size: 0.62rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  opacity: 0.68;
+  color: inherit;
+  opacity: 0.78;
 }
 
 .mode-toggle-btn[aria-pressed="true"] {
@@ -498,26 +500,6 @@ html[data-mode="orbit"] .horizon-limb {
   touch-action: pan-y;
 }
 
-.deck-item-detail {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 420ms var(--mode-ease);
-}
-
-.deck-item-detail.is-open {
-  grid-template-rows: 1fr;
-}
-
-.deck-item-detail-inner {
-  min-height: 0;
-  overflow: hidden;
-}
-
-.deck-item.is-open .deck-item-teaser {
-  display: none;
-}
-
-.deck-card-inner,
 .deck-mask,
 .scroll-rail {
   scrollbar-width: thin;
@@ -668,7 +650,6 @@ html[data-mode="orbit"] .horizon-limb {
   .view-enter,
   .expedition-exit,
   .expedition-enter,
-  .deck-item-detail,
   .cockpit-stagger > * {
     animation: none !important;
     transition: none !important;

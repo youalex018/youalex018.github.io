@@ -20,7 +20,7 @@ export function Contact() {
             Reach out
           </h2>
           <p className="mb-8 max-w-[40ch] leading-relaxed" style={{ color: 'var(--ink-muted)' }}>
-            I'm always down to discuss anything or just chat!
+            Always down to discuss anything or just chat 👇
           </p>
           <GlassPanel className="grid gap-3 p-6 sm:p-8">
             {profile.emails.map((item) => (
@@ -55,9 +55,6 @@ export function Contact() {
                 {item.label}
               </a>
             ))}
-            <a href={profile.resumeUrl} className="focus-ring" style={{ color: 'var(--ink-muted)' }} download>
-              Resume
-            </a>
           </div>
           <p
             className="escape-banner mt-auto mb-0 font-mono text-[0.68rem] uppercase tracking-[0.22em]"

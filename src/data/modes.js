@@ -45,7 +45,7 @@ export function resolveInitialMode() {
 
 export function tabFromHash(hash) {
   const id = (hash ?? '').replace('#', '');
-  return LAYER_TO_TAB[id] ?? TABS.PROJECTS;
+  return LAYER_TO_TAB[id] ?? TABS.EXPERIENCE;
 }
 
 export function persistMode(mode) {

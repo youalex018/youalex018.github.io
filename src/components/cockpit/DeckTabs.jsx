@@ -1,11 +1,11 @@
 import { TABS } from '../../data/modes';
 
 const ITEMS = [
-  { id: TABS.PROJECTS, label: 'Projects' },
   { id: TABS.EXPERIENCE, label: 'Experience' },
+  { id: TABS.PROJECTS, label: 'Projects' },
 ];
 
-export function DeckTabs({ tab, counts, onChange }) {
+export function DeckTabs({ tab, onChange }) {
   function onKeyDown(event) {
     if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
     event.preventDefault();
@@ -16,10 +16,10 @@ export function DeckTabs({ tab, counts, onChange }) {
   }
 
   return (
-    <div className="relative grid grid-cols-2 p-[3px]" role="tablist" aria-label="Cockpit content" onKeyDown={onKeyDown}>
+    <div className="mode-toggle glass relative inline-grid max-w-full grid-cols-2 p-[2px]" role="tablist" aria-label="Cockpit content" onKeyDown={onKeyDown}>
       <span
         className="seg-indicator"
-        style={{ transform: tab === TABS.EXPERIENCE ? 'translateX(100%)' : 'translateX(0)' }}
+        style={{ transform: tab === TABS.PROJECTS ? 'translateX(100%)' : 'translateX(0)' }}
         aria-hidden="true"
       />
       {ITEMS.map((item) => {
@@ -33,12 +33,11 @@ export function DeckTabs({ tab, counts, onChange }) {
             aria-controls={`deck-panel-${item.id}`}
             aria-selected={selected}
             tabIndex={selected ? 0 : -1}
-            className="focus-ring relative z-[1] flex items-center justify-center gap-2 rounded-full px-3 py-2 font-mono text-[0.62rem] uppercase tracking-[0.18em] transition"
+            className="focus-ring relative z-[1] flex items-center justify-center rounded-full px-2.5 py-1 font-mono text-[0.55rem] uppercase tracking-[0.16em] transition"
             style={{ color: 'var(--ink)', opacity: selected ? 1 : 0.62 }}
             onClick={() => onChange(item.id)}
           >
             {item.label}
-            <span className="opacity-60">{String(counts[item.id] ?? 0).padStart(2, '0')}</span>
           </button>
         );
       })}

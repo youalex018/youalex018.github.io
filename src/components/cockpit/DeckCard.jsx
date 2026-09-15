@@ -1,93 +1,50 @@
-import { useRef, useState } from 'react';
 import { GitHubIcon } from '../chrome/SocialIcons';
 import { Badge } from '../ui/Badge';
 
-function isCoarsePointer() {
-  return window.matchMedia('(hover: none)').matches;
-}
-
 export function DeckCard({ item }) {
-  const rootRef = useRef(null);
-  const [open, setOpen] = useState(false);
-
   if (!item) return null;
 
-  const teaser = item.body || item.bullets[0] || '';
-
-  function openFine() {
-    if (!isCoarsePointer()) setOpen(true);
-  }
-
-  function closeFine() {
-    if (!isCoarsePointer()) setOpen(false);
-  }
-
   return (
-    <article
-      ref={rootRef}
-      className={`deck-item glass starlight-glow rounded-2xl p-4 sm:p-5 ${open ? 'is-open' : ''}`}
-      aria-expanded={open}
-      onMouseEnter={openFine}
-      onMouseLeave={closeFine}
-      onFocusCapture={() => setOpen(true)}
-      onBlurCapture={(event) => {
-        if (!rootRef.current?.contains(event.relatedTarget)) closeFine();
-      }}
-      onClick={(event) => {
-        if (event.target.closest('a')) return;
-        if (isCoarsePointer()) setOpen((value) => !value);
-      }}
-    >
-      <p className="m-0 font-mono text-[0.62rem] uppercase tracking-[0.2em]" style={{ color: 'var(--ink-muted)' }}>
-        {item.eyebrow}
-      </p>
+    <article className="deck-item py-4">
+      {item.eyebrow ? (
+        <p className="m-0 font-mono text-[0.62rem] uppercase tracking-[0.2em]" style={{ color: 'var(--ink-muted)' }}>
+          {item.eyebrow}
+        </p>
+      ) : null}
       <h3
-        className="display mt-2 mb-0 text-[clamp(1.15rem,2.6vmin,1.7rem)] leading-[1.12] font-medium"
+        className="display mt-1.5 mb-0 text-[clamp(1.25rem,2.8vmin,1.85rem)] leading-[1.12] font-medium"
         style={{ color: 'var(--ink)' }}
       >
-        {item.title}
+        {item.headline}
       </h3>
-      {item.subtitle ? (
-        <p className="mt-1 mb-0 text-sm" style={{ color: 'var(--ink-muted)' }}>
-          {item.subtitle}
+      {item.secondary ? (
+        <p
+          className="mt-1 mb-0 text-[clamp(0.95rem,2vmin,1.15rem)] leading-snug font-medium"
+          style={{ color: 'var(--ink)' }}
+        >
+          {item.secondary}
         </p>
       ) : null}
-      {teaser ? (
-        <p className="deck-item-teaser mt-3 mb-0 line-clamp-1 text-[0.92rem] leading-relaxed" style={{ color: 'var(--ink)' }}>
-          {teaser}
+      {item.description ? (
+        <p
+          className={`mt-2 mb-0 text-sm leading-relaxed ${item.kind === 'experience' ? 'line-clamp-1' : ''}`}
+          style={{ color: 'var(--ink-muted)' }}
+        >
+          {item.description}
         </p>
       ) : null}
 
-      <div className={`deck-item-detail ${open ? 'is-open' : ''}`}>
-        <div className="deck-item-detail-inner">
-          <div className={item.image ? 'mt-3 grid gap-3 md:grid-cols-[minmax(0,1fr)_minmax(0,11rem)] md:items-start' : 'mt-3'}>
-            <div>
-              {item.body ? (
-                <p className="mt-0 mb-0 text-[0.95rem] leading-relaxed" style={{ color: 'var(--ink)' }}>
-                  {item.body}
-                </p>
-              ) : null}
-              {item.bullets.length ? (
-                <ul
-                  className={`mb-0 list-disc space-y-1.5 pl-4 text-[0.92rem] leading-relaxed ${item.body ? 'mt-3' : 'mt-0'}`}
-                  style={{ color: 'var(--ink)' }}
-                >
-                  {item.bullets.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
-              ) : null}
-            </div>
-            {item.image ? (
-              <img
-                src={item.image}
-                alt=""
-                className="aspect-[16/10] w-full rounded-xl object-cover"
-              />
-            ) : null}
-          </div>
-        </div>
-      </div>
+      {item.kind === 'project' && item.bullets.length ? (
+        <ul className="mt-2 mb-0 list-disc space-y-1.5 pl-4 text-sm leading-relaxed" style={{ color: 'var(--ink-muted)' }}>
+          {item.bullets.map((bullet) => (
+            <li key={bullet}>{bullet}</li>
+          ))}
+        </ul>
+      ) : null}
+
+      {item.image ? (
+        <img src={item.image} alt="" className="mt-3 aspect-[16/10] w-full max-w-[11rem] rounded-xl object-cover" />
+      ) : null}
 
       {item.tags.length ? (
         <ul className="mt-3 mb-0 flex list-none flex-wrap gap-2 p-0">

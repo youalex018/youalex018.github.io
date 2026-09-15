@@ -34,19 +34,9 @@ export function ModeToggle({ compact = false, className = '' }) {
     >
       <span
         className="seg-indicator"
-        style={{ transform: orbit ? 'translateX(100%)' : 'translateX(0)' }}
+        style={{ transform: orbit ? 'translateX(0)' : 'translateX(100%)' }}
         aria-hidden="true"
       />
-      <button
-        type="button"
-        className="focus-ring mode-toggle-btn"
-        aria-pressed={mode === MODES.ASCENT}
-        aria-label="Full Ascent"
-        onClick={() => void setMode(MODES.ASCENT)}
-      >
-        <AscentIcon />
-        {compact ? null : <span>Ascent</span>}
-      </button>
       <button
         type="button"
         className="focus-ring mode-toggle-btn"
@@ -56,6 +46,16 @@ export function ModeToggle({ compact = false, className = '' }) {
       >
         <OrbitIcon />
         {compact ? null : <span>Orbit</span>}
+      </button>
+      <button
+        type="button"
+        className="focus-ring mode-toggle-btn"
+        aria-pressed={mode === MODES.ASCENT}
+        aria-label="Full Ascent"
+        onClick={() => void setMode(MODES.ASCENT)}
+      >
+        <AscentIcon />
+        {compact ? null : <span>Ascent</span>}
       </button>
     </div>
   );
