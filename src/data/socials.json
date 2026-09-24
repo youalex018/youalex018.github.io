@@ -1,0 +1,8 @@
+{
+  "_comment": "PLACEHOLDER — replace hrefs with your real profiles.",
+  "items": [
+    { "id": "github", "label": "GitHub", "href": "https://github.com/youalex018" },
+    { "id": "linkedin", "label": "LinkedIn", "href": "https://www.linkedin.com/in/alex-j-you" },
+    { "id": "email", "label": "Email", "href": "mailto:alex.you0825@gmail.com" }
+  ]
+}
