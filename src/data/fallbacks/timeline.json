@@ -1,0 +1,11 @@
+{
+  "items": [
+    {
+      "id": "example",
+      "date": "Year",
+      "role": "Role",
+      "org": "Organization",
+      "highlights": ["One line about the work."]
+    }
+  ]
+}

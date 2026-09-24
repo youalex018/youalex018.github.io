@@ -1,0 +1,14 @@
+{
+  "items": [
+    {
+      "id": "example",
+      "title": "Project title",
+      "kicker": "Area",
+      "summary": "One or two sentences on what you built.",
+      "impact": "What changed because of it.",
+      "tech": ["Tool"],
+      "repoUrl": "",
+      "year": "2026"
+    }
+  ]
+}

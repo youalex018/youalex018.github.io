@@ -1,4 +1,4 @@
-import projects from '../../data/projects.json';
+import { projects } from '../../data/content';
 import { Reveal } from '../ui/Reveal';
 import { Section } from '../ui/Section';
 import { ProjectCard } from './ProjectCard';

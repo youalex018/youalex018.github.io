@@ -1,4 +1,4 @@
-import profile from '../../data/profile.json';
+import { profile } from '../../data/content';
 import { Badge } from '../ui/Badge';
 import { GlassPanel } from '../ui/GlassPanel';
 import { Reveal } from '../ui/Reveal';

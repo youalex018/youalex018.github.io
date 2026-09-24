@@ -1,4 +1,4 @@
-import profile from '../../data/profile.json';
+import { profile } from '../../data/content';
 import { ScrollCue } from '../chrome/ScrollCue';
 import { Reveal } from '../ui/Reveal';
 import { Section } from '../ui/Section';

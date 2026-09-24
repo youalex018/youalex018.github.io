@@ -4,7 +4,7 @@ import { SocialLinks } from './SocialIcons';
 import { MODES } from '../../data/modes';
 import { useActiveLayer } from '../../hooks/useActiveLayer';
 import { useViewMode } from '../../state/ViewModeContext';
-import socials from '../../data/socials.json';
+import { socials } from '../../data/content';
 
 const LINKS = [
   { id: 'troposphere', label: 'Alex You' },

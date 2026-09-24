@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { TABS } from '../../data/modes';
-import projects from '../../data/projects.json';
-import timeline from '../../data/timeline.json';
+import { projects, timeline } from '../../data/content';
 import { projectsToDeck, timelineToDeck } from '../../lib/deck';
 import { useViewMode } from '../../state/ViewModeContext';
 import { DeckCard } from './DeckCard';

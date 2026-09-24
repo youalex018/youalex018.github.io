@@ -1,0 +1,6 @@
+{
+  "items": [
+    { "id": "github", "label": "GitHub", "href": "https://github.com/" },
+    { "id": "email", "label": "Email", "href": "mailto:you@example.com" }
+  ]
+}

@@ -1,4 +1,4 @@
-import timeline from '../../data/timeline.json';
+import { timeline } from '../../data/content';
 import { Reveal } from '../ui/Reveal';
 import { Section } from '../ui/Section';
 import { Timeline } from './Timeline';

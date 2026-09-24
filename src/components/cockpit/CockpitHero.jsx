@@ -1,5 +1,4 @@
-import profile from '../../data/profile.json';
-import socials from '../../data/socials.json';
+import { profile, socials } from '../../data/content';
 import { SocialLinks } from '../chrome/SocialIcons';
 import { Badge } from '../ui/Badge';
 

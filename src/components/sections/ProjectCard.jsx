@@ -1,6 +1,7 @@
 import { GitHubIcon } from '../chrome/SocialIcons';
 import { Badge } from '../ui/Badge';
 import { GlassPanel } from '../ui/GlassPanel';
+import { ProjectPreview } from '../ui/ProjectPreview';
 
 export function ProjectCard({ project, featured = false }) {
   return (
@@ -8,6 +9,15 @@ export function ProjectCard({ project, featured = false }) {
       as="article"
       className={`starlight-glow p-6 transition duration-500 sm:p-8 ${featured ? 'md:col-span-2 md:grid md:grid-cols-[1.2fr_0.8fr] md:gap-10' : ''}`}
     >
+      {project.image ? (
+        <ProjectPreview
+          image={project.image}
+          imageAlt={project.imageAlt}
+          video={project.video}
+          objectPosition={project.imagePosition}
+          className={`mb-6 ${featured ? 'md:col-span-2 md:mb-0' : ''}`}
+        />
+      ) : null}
       <div>
         <p className="m-0 font-mono text-[0.65rem] uppercase tracking-[0.22em]" style={{ color: 'var(--ink-muted)' }}>
           {project.year} · {project.kicker}

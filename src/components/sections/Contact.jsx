@@ -1,5 +1,4 @@
-import profile from '../../data/profile.json';
-import socials from '../../data/socials.json';
+import { profile, socials } from '../../data/content';
 import { GlassPanel } from '../ui/GlassPanel';
 import { Reveal } from '../ui/Reveal';
 import { Section } from '../ui/Section';

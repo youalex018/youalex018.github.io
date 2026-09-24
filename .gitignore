@@ -21,3 +21,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+/src/data/profile.json
+/src/data/projects.json
+/src/data/socials.json
+/src/data/timeline.json
+/public/projects/

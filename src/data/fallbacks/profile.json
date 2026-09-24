@@ -1,0 +1,19 @@
+{
+  "name": "Your Name",
+  "shortName": "Name",
+  "title": "What you do",
+  "location": "",
+  "email": "you@example.com",
+  "emails": [
+    { "label": "Email", "address": "you@example.com" }
+  ],
+  "resumeUrl": "",
+  "ctas": [],
+  "philosophy": {
+    "lede": "A short line about how you work.",
+    "body": "A few sentences of background. This placeholder is only used when profile.json is missing.",
+    "drive": "What you want to build next."
+  },
+  "background": "Replace this with your own background in profile.json. That file stays on your machine.",
+  "skills": ["Skill"]
+}

@@ -10,6 +10,9 @@ export function projectsToDeck(items) {
     bullets: item.impact ? [item.impact] : [],
     tags: item.tech ?? [],
     image: item.image ?? null,
+    imageAlt: item.imageAlt ?? '',
+    video: item.video ?? null,
+    imagePosition: item.imagePosition ?? 'center',
     links: [
       item.demoUrl ? { label: 'Live demo', href: item.demoUrl } : null,
       item.repoUrl ? { label: 'Repo', href: item.repoUrl, icon: 'github' } : null,
@@ -29,6 +32,9 @@ export function timelineToDeck(items) {
     bullets: [],
     tags: [],
     image: item.image ?? null,
+    imageAlt: item.imageAlt ?? '',
+    video: item.video ?? null,
+    imagePosition: item.imagePosition ?? 'center',
     links: [],
   }));
 }

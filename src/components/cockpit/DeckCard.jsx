@@ -1,11 +1,21 @@
 import { GitHubIcon } from '../chrome/SocialIcons';
 import { Badge } from '../ui/Badge';
+import { ProjectPreview } from '../ui/ProjectPreview';
 
 export function DeckCard({ item }) {
   if (!item) return null;
 
   return (
     <article className="deck-item py-4">
+      {item.image ? (
+        <ProjectPreview
+          image={item.image}
+          imageAlt={item.imageAlt}
+          video={item.video}
+          objectPosition={item.imagePosition}
+          className="mb-3"
+        />
+      ) : null}
       {item.eyebrow ? (
         <p className="m-0 font-mono text-[0.62rem] uppercase tracking-[0.2em]" style={{ color: 'var(--ink-muted)' }}>
           {item.eyebrow}
@@ -40,10 +50,6 @@ export function DeckCard({ item }) {
             <li key={bullet}>{bullet}</li>
           ))}
         </ul>
-      ) : null}
-
-      {item.image ? (
-        <img src={item.image} alt="" className="mt-3 aspect-[16/10] w-full max-w-[11rem] rounded-xl object-cover" />
       ) : null}
 
       {item.tags.length ? (
