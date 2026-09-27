@@ -21,11 +21,13 @@ function AppShell() {
       <a href={mode === MODES.ORBIT ? '#cockpit-deck' : '#troposphere'} className="skip-link">
         Skip to content
       </a>
-      <SkyBackdrop />
-      <Starfield progressRef={progressRef} reduced={reduced} paused={skyHidden} />
-      <Clouds />
-      <Aurora />
-      <Nebula />
+      <div className={skyHidden ? 'sky-parked' : undefined}>
+        <SkyBackdrop />
+        <Starfield progressRef={progressRef} reduced={reduced} paused={skyHidden} />
+        <Clouds />
+        <Aurora />
+        <Nebula />
+      </div>
       <OrbitBackdrop active={orbitActive} reduced={reduced} />
       <SiteHeader />
       <ViewStage />

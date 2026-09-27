@@ -1,7 +1,7 @@
 export function Aurora() {
   return (
     <div className="pointer-events-none fixed inset-0 z-[2] overflow-hidden" aria-hidden="true">
-      <div className="aurora-veil absolute inset-0">
+      <div className="aurora-veil progress-sink absolute inset-0" data-range="0.52 0.88">
         {/* The SVG (with its blur filter) is static; only this wrapper animates, so the
             filtered raster is cached and the drift runs on the compositor. */}
         <div className="drift-slow absolute -inset-[12%] will-change-transform">

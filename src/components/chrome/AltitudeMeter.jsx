@@ -3,6 +3,7 @@ import { LAYERS } from '../../data/layers';
 import { useActiveLayer } from '../../hooks/useActiveLayer';
 import { formatAltitude, progressToAltitude } from '../../lib/altitude';
 import { jumpTo } from '../../lib/jump';
+import { subscribeProgress } from '../../lib/progress';
 import { ModeToggle } from './ModeToggle';
 
 export function AltitudeMeter({ progressRef }) {
@@ -12,35 +13,23 @@ export function AltitudeMeter({ progressRef }) {
   const activeLayer = LAYERS.find((layer) => layer.id === active) ?? LAYERS[0];
 
   useEffect(() => {
-    let frame = 0;
     let lastText = '';
-    const tick = () => {
-      const text = formatAltitude(progressToAltitude(progressRef.current ?? 0));
-      if (text !== lastText) {
-        lastText = text;
-        if (readoutRef.current) readoutRef.current.textContent = text;
-        if (mobileReadoutRef.current) mobileReadoutRef.current.textContent = text;
-      }
-      if (!document.hidden) {
-        frame = requestAnimationFrame(tick);
-      }
+    const render = (progress) => {
+      const text = formatAltitude(progressToAltitude(progress));
+      if (text === lastText) return;
+      lastText = text;
+      if (readoutRef.current) readoutRef.current.textContent = text;
+      if (mobileReadoutRef.current) mobileReadoutRef.current.textContent = text;
     };
-    const onVisibility = () => {
-      if (!document.hidden) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-    document.addEventListener('visibilitychange', onVisibility);
-    return () => {
-      cancelAnimationFrame(frame);
-      document.removeEventListener('visibilitychange', onVisibility);
-    };
+    render(progressRef.current ?? 0);
+    return subscribeProgress(render);
   }, [progressRef]);
 
   return (
     <>
       <nav
         aria-label="Atmospheric layers"
-        className="pointer-events-none fixed top-0 right-0 z-30 hidden h-dvh w-40 flex-col items-end justify-between py-8 pr-4 md:flex"
+        className="chrome-sink pointer-events-none fixed top-0 right-0 z-30 hidden h-dvh w-40 flex-col items-end justify-between py-8 pr-4 md:flex"
         style={{ color: 'var(--chrome-ink)' }}
       >
         <div className="pointer-events-auto text-right font-mono text-[0.65rem] uppercase tracking-[0.22em] opacity-80">
@@ -54,7 +43,7 @@ export function AltitudeMeter({ progressRef }) {
 
         <div className="relative h-[58vh] w-full">
           <div className="absolute top-0 right-1 bottom-0 w-px bg-current/25" />
-          <span className="meter-needle pointer-events-none absolute right-1 h-2.5 w-2.5 translate-x-1/2 -translate-y-1/2 rounded-full bg-current shadow-[0_0_12px_currentColor]" />
+          <span className="meter-needle progress-sink pointer-events-none absolute right-1 h-2.5 w-2.5 translate-x-1/2 -translate-y-1/2 rounded-full bg-current shadow-[0_0_12px_currentColor]" />
           <ol className="absolute inset-0 m-0 list-none p-0">
             {LAYERS.map((layer, index) => {
               const top = `${((LAYERS.length - 1 - index) / (LAYERS.length - 1)) * 100}%`;
@@ -94,7 +83,7 @@ export function AltitudeMeter({ progressRef }) {
 
       <nav
         aria-label="Atmospheric layers"
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-current/15 px-4 py-2.5 backdrop-blur-md md:hidden"
+        className="chrome-sink fixed inset-x-0 bottom-0 z-30 border-t border-current/15 px-4 py-2.5 backdrop-blur-md md:hidden"
         style={{
           color: 'var(--chrome-ink)',
           background: 'color-mix(in oklab, var(--panel, rgb(255 250 240 / 0.7)) 80%, transparent)',
@@ -109,7 +98,7 @@ export function AltitudeMeter({ progressRef }) {
         </div>
         <div className="relative mx-2 h-8">
           <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-current/30" />
-          <span className="meter-needle-x absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-current shadow-[0_0_10px_currentColor]" />
+          <span className="meter-needle-x progress-sink absolute top-1/2 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-current shadow-[0_0_10px_currentColor]" />
           {LAYERS.map((layer, index) => {
             const left = `${(index / (LAYERS.length - 1)) * 100}%`;
             const isActive = layer.id === active;

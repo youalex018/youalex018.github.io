@@ -1,13 +1,14 @@
 import { profile } from '../../data/content';
 import { ScrollCue } from '../chrome/ScrollCue';
-import { Reveal } from '../ui/Reveal';
+import { Drift } from '../ui/Drift';
 import { Section } from '../ui/Section';
 
 export function Hero() {
   return (
     <Section id="troposphere" theme="light" className="flex flex-col justify-center pb-28 md:pb-24">
       <div className="max-w-6xl">
-        <Reveal>
+        <Drift>
+          <ScrollCue />
           <h1
             className="display m-0 max-w-[11ch] text-[clamp(3.6rem,13vw,9rem)] leading-[0.86] font-medium tracking-[-0.03em]"
             style={{ color: 'var(--ink)' }}
@@ -20,8 +21,7 @@ export function Hero() {
           >
             {profile.title}
           </p>
-          <ScrollCue />
-        </Reveal>
+        </Drift>
       </div>
     </Section>
   );

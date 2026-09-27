@@ -29,7 +29,7 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="pointer-events-none fixed top-0 right-0 left-0 z-40">
+    <header className="chrome-sink pointer-events-none fixed top-0 right-0 left-0 z-40">
       <nav
         aria-label="Primary"
         className="pointer-events-auto flex items-center justify-between gap-3 px-4 py-4 sm:px-6 md:pr-44"

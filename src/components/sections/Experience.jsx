@@ -1,5 +1,5 @@
 import { timeline } from '../../data/content';
-import { Reveal } from '../ui/Reveal';
+import { Drift } from '../ui/Drift';
 import { Section } from '../ui/Section';
 import { Timeline } from './Timeline';
 
@@ -7,7 +7,7 @@ export function Experience() {
   return (
     <Section id="thermosphere" theme="dark" className="flex flex-col justify-center">
       <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-        <Reveal>
+        <Drift>
           <p className="m-0 font-mono text-[0.68rem] uppercase tracking-[0.28em]" style={{ color: 'var(--ink-muted)' }}>
             Thermosphere
           </p>
@@ -20,10 +20,10 @@ export function Experience() {
           <p className="m-0 max-w-[36ch] leading-relaxed" style={{ color: 'var(--ink-muted)' }}>
             Internships and student teams across software, firmware, and hardware.
           </p>
-        </Reveal>
-        <Reveal delay={100}>
+        </Drift>
+        <Drift>
           <Timeline items={timeline.items} />
-        </Reveal>
+        </Drift>
       </div>
     </Section>
   );

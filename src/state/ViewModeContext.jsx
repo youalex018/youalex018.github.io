@@ -10,7 +10,7 @@ import {
 } from '../data/modes';
 import { useProgressTween } from '../hooks/useProgressTween';
 import { jumpTo } from '../lib/jump';
-import { applyProgress, scrollProgressFromY } from '../lib/progress';
+import { applyProgress, scrollYFromProgress } from '../lib/progress';
 
 const ViewModeContext = createContext(null);
 
@@ -22,7 +22,7 @@ function wait(ms) {
 
 export function ViewModeProvider({ children }) {
   const progressRef = useRef(0);
-  const savedScrollY = useRef(0);
+  const savedProgress = useRef(0);
   const modeRef = useRef(resolveInitialMode());
   const switchingRef = useRef(false);
   const tweenTo = useProgressTween(progressRef);
@@ -67,7 +67,7 @@ export function ViewModeProvider({ children }) {
       modeRef.current = next;
 
       if (next === MODES.ORBIT) {
-        savedScrollY.current = window.scrollY;
+        savedProgress.current = progressRef.current;
         setLeaving(MODES.ASCENT);
         setPhase('exiting');
         setModeState(MODES.ORBIT);
@@ -75,6 +75,7 @@ export function ViewModeProvider({ children }) {
         persistMode(MODES.ORBIT);
         await Promise.all([tweenTo(COCKPIT_PROGRESS, tweenMs), wait(settleMs)]);
       } else {
+        const restore = savedProgress.current;
         setLeaving(MODES.ORBIT);
         setPhase('entering');
         html.classList.add('no-smooth');
@@ -84,8 +85,11 @@ export function ViewModeProvider({ children }) {
         await new Promise((resolve) => {
           requestAnimationFrame(() => requestAnimationFrame(resolve));
         });
-        const target = scrollProgressFromY(savedScrollY.current || 0);
-        await Promise.all([tweenTo(target, tweenMs), wait(settleMs)]);
+        // Land on the saved altitude before animating, so the scroll listener
+        // that starts when Ascent mounts can't overwrite it mid-tween.
+        window.scrollTo({ top: scrollYFromProgress(restore), left: 0, behavior: 'instant' });
+        applyProgress(restore, progressRef);
+        await wait(settleMs);
         html.classList.remove('no-smooth');
       }
 
@@ -130,7 +134,7 @@ export function ViewModeProvider({ children }) {
       setTab,
       navigate,
       progressRef,
-      savedScrollY,
+      savedProgress,
     }),
     [mode, setMode, toggleMode, phase, leaving, tab, setTab, navigate],
   );

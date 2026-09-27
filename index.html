@@ -20,6 +20,7 @@
 <body>
   <script>
     (function () {
+      if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       var DEFAULT_MODE = 'orbit';
       var STORAGE_KEY = 'alex:view-mode';
       var params = new URLSearchParams(location.search);
@@ -31,8 +32,6 @@
       if (mode !== 'ascent' && mode !== 'orbit') mode = DEFAULT_MODE;
       document.documentElement.dataset.mode = mode;
       if (mode === 'orbit') {
-        /* Keep in sync with COCKPIT_PROGRESS in src/data/modes.js */
-        document.documentElement.style.setProperty('--progress', '0.82');
         document.documentElement.style.setProperty('--chrome-ink', '#f8fafc');
         document.documentElement.style.setProperty('--chrome-muted', '#e2e8f0');
       }

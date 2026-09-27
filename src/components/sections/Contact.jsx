@@ -1,14 +1,14 @@
 import { profile, socials } from '../../data/content';
 import { GlassPanel } from '../ui/GlassPanel';
-import { Reveal } from '../ui/Reveal';
+import { Drift } from '../ui/Drift';
 import { Section } from '../ui/Section';
-import { Constellation } from './Constellation';
+import { Galaxy } from './Galaxy';
 
 export function Contact() {
   return (
     <Section id="exosphere" theme="dark" className="flex flex-col justify-center pb-28 md:pb-24">
       <div className="mx-auto grid w-full max-w-6xl gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-        <Reveal>
+        <Drift>
           <p className="m-0 font-mono text-[0.68rem] uppercase tracking-[0.28em]" style={{ color: 'var(--ink-muted)' }}>
             Exosphere · Contact
           </p>
@@ -37,10 +37,10 @@ export function Contact() {
               </a>
             ))}
           </GlassPanel>
-        </Reveal>
+        </Drift>
 
-        <Reveal delay={120} className="flex flex-col gap-6">
-          <Constellation />
+        <Drift className="flex flex-col gap-6">
+          <Galaxy />
           <div className="flex flex-wrap gap-x-5 gap-y-3 font-mono text-[0.72rem] uppercase tracking-[0.16em]">
             {socials.items.map((item) => (
               <a
@@ -56,12 +56,12 @@ export function Contact() {
             ))}
           </div>
           <p
-            className="escape-banner mt-auto mb-0 font-mono text-[0.68rem] uppercase tracking-[0.22em]"
+            className="escape-banner progress-sink mt-auto mb-0 font-mono text-[0.68rem] uppercase tracking-[0.22em]"
             style={{ color: 'var(--ink)' }}
           >
             Escape velocity reached
           </p>
-        </Reveal>
+        </Drift>
       </div>
     </Section>
   );

@@ -123,7 +123,14 @@ export function ProjectPreview({
         event.preventDefault();
       }}
     >
-      <img src={image} alt={canPlay ? '' : imageAlt} draggable="false" style={mediaStyle} />
+      <img
+        src={image}
+        alt={canPlay ? '' : imageAlt}
+        draggable="false"
+        loading="lazy"
+        decoding="async"
+        style={mediaStyle}
+      />
       {canPlay ? (
         <video
           ref={videoRef}

@@ -1,13 +1,13 @@
 import { profile } from '../../data/content';
 import { Badge } from '../ui/Badge';
 import { GlassPanel } from '../ui/GlassPanel';
-import { Reveal } from '../ui/Reveal';
+import { Drift } from '../ui/Drift';
 import { Section } from '../ui/Section';
 
 function WeatherBalloon() {
   return (
     <svg
-      className="balloon-rise h-40 w-24 text-sky-950/70 md:h-52 md:w-28"
+      className="balloon-rise progress-sink h-40 w-24 text-sky-950/70 md:h-52 md:w-28"
       viewBox="0 0 80 160"
       fill="none"
       aria-hidden="true"
@@ -31,7 +31,7 @@ export function About() {
   return (
     <Section id="stratosphere" theme="light" className="flex flex-col justify-center">
       <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-        <Reveal>
+        <Drift>
           <p className="m-0 font-mono text-[0.68rem] uppercase tracking-[0.28em]" style={{ color: 'var(--ink-muted)' }}>
             Stratosphere · About
           </p>
@@ -44,10 +44,10 @@ export function About() {
           <div className="mt-8 hidden lg:block">
             <WeatherBalloon />
           </div>
-        </Reveal>
+        </Drift>
 
         <div className="grid gap-5">
-          <Reveal delay={80}>
+          <Drift>
             <GlassPanel className="p-6 sm:p-8">
               <p className="m-0 text-[1.05rem] leading-relaxed" style={{ color: 'var(--ink)' }}>
                 {profile.philosophy.body}
@@ -59,8 +59,8 @@ export function About() {
                 {profile.philosophy.drive}
               </p>
             </GlassPanel>
-          </Reveal>
-          <Reveal delay={160}>
+          </Drift>
+          <Drift>
             <ul className="m-0 flex list-none flex-wrap gap-2 p-0" aria-label="Core skill stack">
               {profile.skills.map((skill) => (
                 <li key={skill}>
@@ -68,7 +68,7 @@ export function About() {
                 </li>
               ))}
             </ul>
-          </Reveal>
+          </Drift>
         </div>
       </div>
     </Section>

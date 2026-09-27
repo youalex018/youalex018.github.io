@@ -6,8 +6,26 @@
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
+/* Non-inheriting, so a per-frame write restyles one element, not its subtree. */
+@property --progress {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --drift {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
+@property --drift-dir {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
+
 :root {
-  --progress: 0;
   --chrome-ink: #1c1917;
   --chrome-muted: #57534e;
   --mode-ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -27,6 +45,14 @@ html[data-mode="orbit"] #root {
   height: 100%;
   overflow: hidden;
   background: var(--orbit-void);
+}
+
+html[data-mode="ascent"] {
+  scrollbar-width: none;
+}
+
+html[data-mode="ascent"]::-webkit-scrollbar {
+  display: none;
 }
 
 html.no-smooth {
@@ -96,6 +122,7 @@ button {
 
 [data-theme="light"] {
   --panel: rgba(255, 250, 240, 0.5);
+  --panel-solid: rgba(255, 250, 240, 0.66);
   --panel-border: rgba(28, 25, 23, 0.12);
   --ink: #1c1917;
   --ink-muted: #44403c;
@@ -105,6 +132,7 @@ button {
 
 [data-theme="dark"] {
   --panel: rgba(8, 12, 28, 0.46);
+  --panel-solid: rgba(8, 12, 28, 0.62);
   --panel-border: rgba(248, 250, 252, 0.16);
   --ink: #f8fafc;
   --ink-muted: #e2e8f0;
@@ -138,11 +166,11 @@ button {
   font-variation-settings: "SOFT" 40, "WONK" 0.8;
 }
 
+/* No backdrop-filter: cards scroll and fade, so a blur would be re-rendered
+   every frame and drops out whenever an ancestor's opacity dips below 1. */
 .glass {
-  background: var(--panel);
+  background: var(--panel-solid, var(--panel));
   border: 1px solid var(--panel-border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   box-shadow:
     0 0 0 1px color-mix(in oklab, var(--panel-border), transparent 35%),
     0 28px 60px -28px rgb(0 0 0 / 0.28);
@@ -211,11 +239,9 @@ button {
 .preview-scan {
   background: repeating-linear-gradient(
     to bottom,
-    rgb(255 255 255 / 0.05) 0 1px,
+    rgb(255 255 255 / 0.03) 0 1px,
     transparent 1px 3px
   );
-  mix-blend-mode: overlay;
-  opacity: 0.5;
 }
 
 .preview-sweep {
@@ -250,14 +276,13 @@ button {
   right: 0.7rem;
   border: 1px solid color-mix(in oklab, var(--ink) 24%, transparent);
   border-radius: 999px;
-  background: color-mix(in oklab, var(--panel) 82%, transparent);
+  background: color-mix(in oklab, var(--panel-solid, var(--panel)) 92%, transparent);
   padding: 0.18rem 0.52rem;
   font-family: var(--font-mono);
   font-size: 0.56rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink);
-  backdrop-filter: blur(8px);
 }
 
 .project-preview.is-live .preview-chip {
@@ -290,25 +315,25 @@ button {
 .sky-strip {
   height: 500vh;
   width: 100%;
-  transform: translate3d(0, calc(var(--progress) * -400vh), 0);
+  transform: translate3d(0, calc((var(--progress) - 1) * 400vh), 0);
   will-change: transform;
   background: linear-gradient(
     to bottom,
-    #fde68a 0%,
-    #fcd34d 5%,
-    #fbbf24 9%,
-    #fb923c 13%,
-    #fdba74 16%,
-    #fef3c7 19%,
-    #bae6fd 23%,
-    #7dd3fc 28%,
-    #38bdf8 35%,
-    #0284c7 44%,
-    #0369a1 52%,
-    #1e3a8a 58%,
-    #1e1b4b 68%,
-    #0f172a 82%,
-    #030712 100%
+    #030712 0%,
+    #0f172a 18%,
+    #1e1b4b 32%,
+    #1e3a8a 42%,
+    #0369a1 48%,
+    #0284c7 56%,
+    #38bdf8 65%,
+    #7dd3fc 72%,
+    #bae6fd 77%,
+    #fef3c7 81%,
+    #fdba74 84%,
+    #fb923c 87%,
+    #fbbf24 91%,
+    #fcd34d 95%,
+    #fde68a 100%
   );
 }
 
@@ -368,17 +393,22 @@ button {
 /* Intro clouds fully opaque at the top, then fade out through troposphere. */
 .cloud-top {
   opacity: clamp(0, calc(1.05 - var(--progress) * 4.2), 1);
-  transform: translate3d(0, calc(var(--progress) * -18vh), 0);
+  transform: translate3d(0, calc(var(--progress) * 18vh), 0);
 }
 
 .cloud-mid {
   opacity: clamp(0, calc(1.05 - var(--progress) * 4.8), 1);
-  transform: translate3d(0, calc(var(--progress) * -36vh), 0);
+  transform: translate3d(0, calc(var(--progress) * 36vh), 0);
 }
 
 .cloud-near {
   opacity: clamp(0, calc(1.02 - var(--progress) * 5.4), 1);
-  transform: translate3d(0, calc(var(--progress) * -72vh), 0);
+  transform: translate3d(0, calc(var(--progress) * 72vh), 0);
+}
+
+.cloud-fore {
+  opacity: clamp(0, calc(0.8 - var(--progress) * 4.5), 0.8);
+  transform: translate3d(0, calc(var(--progress) * 110vh), 0);
 }
 
 .cloud-strato {
@@ -386,7 +416,7 @@ button {
     min(1, max(0, (var(--progress) - 0.12) * 8)) *
     min(1, max(0, (0.48 - var(--progress)) * 7))
   );
-  transform: translate3d(0, calc((var(--progress) - 0.2) * -16vh), 0);
+  transform: translate3d(0, calc((var(--progress) - 0.2) * 16vh), 0);
 }
 
 .cloud-strato-wisp {
@@ -394,7 +424,7 @@ button {
     min(0.92, max(0, (var(--progress) - 0.14) * 7)) *
     min(0.92, max(0, (0.5 - var(--progress)) * 6))
   );
-  transform: translate3d(0, calc((var(--progress) - 0.2) * -10vh), 0);
+  transform: translate3d(0, calc((var(--progress) - 0.2) * 10vh), 0);
 }
 
 .cloud-meso {
@@ -402,7 +432,7 @@ button {
     min(1, max(0, (var(--progress) - 0.32) * 7)) *
     min(1, max(0, (0.68 - var(--progress)) * 6))
   );
-  transform: translate3d(0, calc((var(--progress) - 0.4) * -18vh), 0);
+  transform: translate3d(0, calc((var(--progress) - 0.4) * 18vh), 0);
 }
 
 .cloud-meso-wisp {
@@ -410,7 +440,7 @@ button {
     min(0.9, max(0, (var(--progress) - 0.34) * 6)) *
     min(0.9, max(0, (0.72 - var(--progress)) * 5))
   );
-  transform: translate3d(0, calc((var(--progress) - 0.4) * -10vh), 0);
+  transform: translate3d(0, calc((var(--progress) - 0.4) * 10vh), 0);
 }
 
 .cirrus {
@@ -418,7 +448,7 @@ button {
     min(1, max(0, (var(--progress) - 0.12) * 8)) *
     min(1, max(0, (0.62 - var(--progress)) * 6))
   );
-  transform: translate3d(calc(var(--progress) * 6vw), calc(var(--progress) * -120px), 0);
+  transform: translate3d(calc(var(--progress) * 6vw), calc(var(--progress) * 120px), 0);
 }
 
 .horizon-arc {
@@ -444,17 +474,49 @@ button {
   transform: translateY(calc((1 - min(1, max(0, (var(--progress) - 0.965) * 40))) * 12px));
 }
 
-.reveal {
-  opacity: 0;
-  transform: translate3d(0, 22px, 0);
-  transition:
-    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+.galaxy {
+  background: #070b16;
+  border: 1px solid rgb(248 250 252 / 0.1);
 }
 
-.reveal.is-revealed {
-  opacity: 1;
-  transform: none;
+.galaxy-spin {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: galaxy-turn 120s linear infinite;
+}
+
+.galaxy-spin-slow {
+  animation-duration: 180s;
+  animation-direction: reverse;
+}
+
+.galaxy-spin-fast {
+  animation-duration: 86s;
+}
+
+@keyframes galaxy-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.drift {
+  opacity: var(--drift);
+  transform: translate3d(0, calc((1 - var(--drift)) * var(--drift-dir) * 22px), 0);
+  will-change: opacity, transform;
+}
+
+.is-parked {
+  visibility: hidden;
+}
+
+.is-parked *,
+.sky-parked * {
+  animation-play-state: paused !important;
+}
+
+.sky-parked {
+  visibility: hidden;
 }
 
 .meter-needle {
@@ -499,32 +561,45 @@ button {
   }
 }
 
-@keyframes pulse-cue {
-  0%,
+.scroll-cue {
+  opacity: clamp(0, calc(1 - var(--progress) * 25), 1);
+}
+
+.scroll-cue-coarse {
+  display: none;
+}
+
+.scroll-cue-rise {
+  animation: cue-rise 1.8s ease-in-out infinite;
+}
+
+@keyframes cue-rise {
+  0% {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
   100% {
     transform: translateY(0);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translateY(8px);
-    opacity: 1;
+    opacity: 0;
   }
 }
 
-.scroll-cue-dot {
-  animation: pulse-cue 2.2s ease-in-out infinite;
+@media (pointer: coarse) {
+  .scroll-cue-fine {
+    display: none;
+  }
+
+  .scroll-cue-coarse {
+    display: inline;
+  }
 }
 
 .focus-ring:focus-visible {
   outline: 2px solid color-mix(in oklab, var(--ink, #f8fafc) 80%, #38bdf8);
   outline-offset: 3px;
-}
-
-@media (max-width: 640px) {
-  .glass {
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-  }
 }
 
 @media (min-width: 768px) {
@@ -594,7 +669,8 @@ html[data-mode="orbit"] .orbit-backdrop {
   opacity: 0.78;
 }
 
-.mode-toggle-btn[aria-pressed="true"] {
+.mode-toggle-btn[aria-pressed="true"],
+.mode-toggle-btn[aria-selected="true"] {
   opacity: 1;
 }
 
@@ -657,7 +733,6 @@ html[data-mode="orbit"] .orbit-backdrop {
   to {
     opacity: 0;
     transform: scale(1.04);
-    filter: blur(6px);
   }
 }
 
@@ -731,6 +806,7 @@ html[data-mode="orbit"] .orbit-backdrop {
   .cloud-strato-wisp,
   .cloud-meso,
   .cloud-meso-wisp,
+  .cloud-fore,
   .cirrus,
   .balloon-rise,
   .escape-banner {
@@ -739,14 +815,16 @@ html[data-mode="orbit"] .orbit-backdrop {
 
   .cloud-band,
   .drift-slow,
-  .scroll-cue-dot {
+  .scroll-cue,
+  .scroll-cue-rise,
+  .galaxy-spin {
     animation: none !important;
   }
 
-  .reveal {
+  .drift {
     opacity: 1;
     transform: none;
-    transition: none;
+    will-change: auto;
   }
 
   .orbit-backdrop,

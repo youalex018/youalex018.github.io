@@ -54,7 +54,6 @@ export function SocialLinks({ items, className = '' }) {
             key={item.id}
             href={item.href}
             className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full opacity-80 transition hover:opacity-100"
-            style={{ color: 'var(--chrome-ink)' }}
             aria-label={item.label}
             target={external ? '_blank' : undefined}
             rel={external ? 'noreferrer' : undefined}

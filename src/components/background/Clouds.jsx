@@ -143,13 +143,31 @@ function CloudSet({ clouds, kind = 'cumulus', fill, shade, wispFill }) {
   );
 }
 
-function CloudBand({ clouds, speed, wrapperClass, kind = 'cumulus', fill, shade, wispFill }) {
+// `range` is the progress window where the band's opacity is above zero; outside
+// it the band is hidden so its layer isn't drawn or animated.
+function CloudBand({ clouds, speed, wrapperClass, range, kind = 'cumulus', fill, shade, wispFill }) {
   return (
-    <div className={`absolute inset-0 ${wrapperClass}`}>
+    <div className={`progress-sink absolute inset-0 ${wrapperClass}`} data-range={range}>
       <div className={`cloud-band ${speed}`}>
         <CloudSet clouds={clouds} kind={kind} fill={fill} shade={shade} wispFill={wispFill} />
         <CloudSet clouds={clouds} kind={kind} fill={fill} shade={shade} wispFill={wispFill} />
       </div>
+    </div>
+  );
+}
+
+const FORE = [
+  { left: 4, top: 84, w: 24, variant: 'a' },
+  { left: 40, top: 76, w: 28, variant: 'c' },
+  { left: 74, top: 80, w: 26, variant: 'b' },
+];
+
+// Foreground band rendered inside the Ascent view, so it passes in front of
+// the content. It only exists while Ascent is mounted.
+export function CloudsFore() {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-20 overflow-hidden" aria-hidden="true">
+      <CloudBand clouds={FORE} speed="cloud-speed-near" wrapperClass="cloud-fore" range="-1 0.18" />
     </div>
   );
 }
@@ -201,15 +219,16 @@ export function Clouds() {
         </defs>
       </svg>
 
-      <div className="sun-orb absolute -right-[6%] top-[6%] h-[44vw] w-[44vw] max-h-[32rem] max-w-[32rem] rounded-full bg-[radial-gradient(circle,rgba(255,241,190,1)_0%,rgba(253,224,71,0.75)_22%,rgba(251,146,60,0.42)_46%,transparent_72%)]" />
+      <div data-range="-1 0.31" className="sun-orb progress-sink absolute -right-[6%] top-[6%] h-[44vw] w-[44vw] max-h-[32rem] max-w-[32rem] rounded-full bg-[radial-gradient(circle,rgba(255,241,190,1)_0%,rgba(253,224,71,0.75)_22%,rgba(251,146,60,0.42)_46%,transparent_72%)]" />
 
-      <CloudBand clouds={TOP} speed="cloud-speed-far" wrapperClass="cloud-top" />
-      <CloudBand clouds={MID} speed="cloud-speed-mid" wrapperClass="cloud-mid" />
-      <CloudBand clouds={LOW} speed="cloud-speed-near" wrapperClass="cloud-near" />
+      <CloudBand clouds={TOP} speed="cloud-speed-far" wrapperClass="cloud-top" range="-1 0.25" />
+      <CloudBand clouds={MID} speed="cloud-speed-mid" wrapperClass="cloud-mid" range="-1 0.22" />
+      <CloudBand clouds={LOW} speed="cloud-speed-near" wrapperClass="cloud-near" range="-1 0.19" />
       <CloudBand
         clouds={STRATO_FLUFF}
         speed="cloud-speed-strato"
         wrapperClass="cloud-strato"
+        range="0.12 0.48"
         fill="url(#stratoLit)"
         shade="url(#stratoShade)"
       />
@@ -217,6 +236,7 @@ export function Clouds() {
         clouds={STRATO_WISP}
         speed="cloud-speed-strato-wisp"
         wrapperClass="cloud-strato-wisp"
+        range="0.14 0.5"
         kind="wisp"
         wispFill="url(#stratoWisp)"
       />
@@ -224,13 +244,21 @@ export function Clouds() {
         clouds={MESO_FLUFF}
         speed="cloud-speed-meso"
         wrapperClass="cloud-meso"
+        range="0.32 0.68"
         fill="url(#mesoLit)"
         shade="url(#mesoShade)"
       />
-      <CloudBand clouds={MESO_WISP} speed="cloud-speed-meso-wisp" wrapperClass="cloud-meso-wisp" kind="wisp" />
+      <CloudBand
+        clouds={MESO_WISP}
+        speed="cloud-speed-meso-wisp"
+        wrapperClass="cloud-meso-wisp"
+        range="0.34 0.72"
+        kind="wisp"
+      />
 
       <svg
-        className="cirrus absolute left-[-10%] top-[16%] h-[40%] w-[120%] text-white"
+        data-range="0.12 0.62"
+        className="cirrus progress-sink absolute left-[-10%] top-[16%] h-[40%] w-[120%] text-white"
         viewBox="0 0 1200 400"
         fill="none"
       >
@@ -255,7 +283,8 @@ export function Clouds() {
       </svg>
 
       <svg
-        className="horizon-arc absolute inset-x-[-20%] bottom-[-28%] h-[55%] w-[140%] text-sky-900/25"
+        data-range="0.14 0.42"
+        className="horizon-arc progress-sink absolute inset-x-[-20%] bottom-[-28%] h-[55%] w-[140%] text-sky-900/25"
         viewBox="0 0 1400 500"
         fill="none"
       >

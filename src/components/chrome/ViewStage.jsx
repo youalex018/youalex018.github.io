@@ -5,7 +5,7 @@ import { CockpitView } from '../cockpit/CockpitView';
 import { ExpeditionView } from '../expedition/ExpeditionView';
 
 export function ViewStage() {
-  const { mode, leaving, phase, progressRef, savedScrollY } = useViewMode();
+  const { mode, leaving, phase, progressRef, savedProgress } = useViewMode();
   useScrollProgress(progressRef, mode === MODES.ASCENT && phase === 'idle');
 
   const showAscent = mode === MODES.ASCENT || leaving === MODES.ASCENT;
@@ -30,7 +30,7 @@ export function ViewStage() {
       {showAscent ? (
         <ExpeditionView
           progressRef={progressRef}
-          savedScrollY={savedScrollY}
+          savedProgress={savedProgress}
           className={ascentClass}
           inert={mode !== MODES.ASCENT}
         />

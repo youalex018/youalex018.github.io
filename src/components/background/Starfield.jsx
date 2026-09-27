@@ -1,4 +1,9 @@
 import { useEffect, useRef } from 'react';
+import { subscribeProgress } from '../../lib/progress';
+
+const ALPHA_STEPS = 16;
+// Twinkle doesn't need more than ~60–72 fps; high-refresh screens skip frames.
+const MIN_FRAME_MS = 13;
 
 function starCount(width, height, isMobile) {
   const area = width * height;
@@ -23,6 +28,10 @@ function seedStars(width, height, count) {
   return stars;
 }
 
+function starAlphaFor(progress) {
+  return Math.min(1, Math.max(0, (progress - 0.32) / 0.42));
+}
+
 export function Starfield({ progressRef, reduced, paused = false }) {
   const canvasRef = useRef(null);
   const pointerRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
@@ -36,7 +45,8 @@ export function Starfield({ progressRef, reduced, paused = false }) {
     let stars = [];
     let meteors = [];
     let frame = 0;
-    let running = true;
+    let lastDraw = 0;
+    let blank = false;
     let width = 0;
     let height = 0;
     let dpr = 1;
@@ -53,6 +63,7 @@ export function Starfield({ progressRef, reduced, paused = false }) {
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       stars = seedStars(width, height, starCount(width, height, isMobile));
+      blank = false;
     };
 
     const spawnMeteor = (progress) => {
@@ -68,37 +79,34 @@ export function Starfield({ progressRef, reduced, paused = false }) {
       });
     };
 
-    const draw = (time) => {
-      if (!running) return;
-      const progress = progressRef.current ?? 0;
-      const starAlpha = Math.min(1, Math.max(0, (progress - 0.32) / 0.42));
-      ctx.clearRect(0, 0, width, height);
+    const paintStars = (time, starAlpha) => {
+      const px = pointerRef.current.x;
+      const py = pointerRef.current.y;
+      pointerRef.current.x += (pointerRef.current.tx - px) * 0.1;
+      pointerRef.current.y += (pointerRef.current.ty - py) * 0.1;
 
-      if (starAlpha > 0.01) {
-        const px = pointerRef.current.x;
-        const py = pointerRef.current.y;
-        pointerRef.current.x += (pointerRef.current.tx - px) * 0.06;
-        pointerRef.current.y += (pointerRef.current.ty - py) * 0.06;
+      // One path per brightness step instead of one fill per star.
+      const paths = Array.from({ length: ALPHA_STEPS }, () => new Path2D());
+      stars.forEach((star) => {
+        const twinkle = reduced ? 1 : 0.55 + 0.45 * Math.sin(time * 0.0018 * star.sp + star.tw);
+        const step = Math.min(ALPHA_STEPS - 1, Math.floor(star.bright * twinkle * ALPHA_STEPS));
+        const x = star.x + (reduced ? 0 : px * star.depth * 18);
+        const y = star.y + (reduced ? 0 : py * star.depth * 14);
+        paths[step].moveTo(x + star.r, y);
+        paths[step].arc(x, y, star.r, 0, Math.PI * 2);
+      });
 
-        ctx.save();
-        ctx.globalCompositeOperation = 'lighter';
-        stars.forEach((star) => {
-          const twinkle = reduced
-            ? 1
-            : 0.55 + 0.45 * Math.sin(time * 0.0018 * star.sp + star.tw);
-          const ox = reduced ? 0 : px * star.depth * 18;
-          const oy = reduced ? 0 : py * star.depth * 14;
-          ctx.globalAlpha = starAlpha * star.bright * twinkle;
-          ctx.fillStyle = '#f8fafc';
-          ctx.beginPath();
-          ctx.arc(star.x + ox, star.y + oy, star.r, 0, Math.PI * 2);
-          ctx.fill();
-        });
-        ctx.restore();
-      }
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.fillStyle = '#f8fafc';
+      paths.forEach((path, step) => {
+        ctx.globalAlpha = starAlpha * ((step + 0.5) / ALPHA_STEPS);
+        ctx.fill(path);
+      });
+      ctx.restore();
+    };
 
-      if (!reduced) spawnMeteor(progress);
-
+    const paintMeteors = () => {
       meteors.forEach((meteor) => {
         meteor.x += meteor.vx;
         meteor.y += meteor.vy;
@@ -119,10 +127,49 @@ export function Starfield({ progressRef, reduced, paused = false }) {
       meteors = meteors.filter(
         (meteor) => meteor.life > 0 && meteor.x < width + 40 && meteor.y < height + 40,
       );
+    };
 
-      if (!reduced && !document.hidden) {
-        frame = requestAnimationFrame(draw);
+    // Returns whether anything is left to animate.
+    const draw = (time) => {
+      const progress = progressRef.current ?? 0;
+      const starAlpha = starAlphaFor(progress);
+      const visible = starAlpha > 0.01;
+
+      if (!visible && !meteors.length) {
+        if (!blank) {
+          ctx.clearRect(0, 0, width, height);
+          blank = true;
+        }
+        return false;
       }
+
+      blank = false;
+      ctx.clearRect(0, 0, width, height);
+      if (visible) paintStars(time, starAlpha);
+      if (!reduced) {
+        spawnMeteor(progress);
+        paintMeteors();
+      }
+      return !reduced;
+    };
+
+    const loop = (time) => {
+      frame = 0;
+      if (time - lastDraw < MIN_FRAME_MS) {
+        frame = requestAnimationFrame(loop);
+        return;
+      }
+      lastDraw = time;
+      if (draw(time)) frame = requestAnimationFrame(loop);
+    };
+
+    const wake = () => {
+      if (document.hidden) return;
+      if (reduced) {
+        draw(0);
+        return;
+      }
+      if (!frame) frame = requestAnimationFrame(loop);
     };
 
     const onPointer = (event) => {
@@ -132,41 +179,30 @@ export function Starfield({ progressRef, reduced, paused = false }) {
 
     const onVisibility = () => {
       if (document.hidden) {
-        running = false;
         cancelAnimationFrame(frame);
+        frame = 0;
         return;
       }
-      running = true;
-      if (!reduced) frame = requestAnimationFrame(draw);
+      wake();
     };
 
     const onResize = () => {
       resize();
-      if (reduced) draw(0);
-    };
-
-    const onScroll = () => {
-      if (!reduced) return;
-      draw(0);
+      wake();
     };
 
     resize();
-    if (reduced) {
-      draw(0);
-    } else {
-      frame = requestAnimationFrame(draw);
-    }
+    wake();
+    const unsubscribe = subscribeProgress(wake);
 
     window.addEventListener('resize', onResize);
-    window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('pointermove', onPointer, { passive: true });
     document.addEventListener('visibilitychange', onVisibility);
 
     return () => {
-      running = false;
       cancelAnimationFrame(frame);
+      unsubscribe();
       window.removeEventListener('resize', onResize);
-      window.removeEventListener('scroll', onScroll);
       window.removeEventListener('pointermove', onPointer);
       document.removeEventListener('visibilitychange', onVisibility);
     };

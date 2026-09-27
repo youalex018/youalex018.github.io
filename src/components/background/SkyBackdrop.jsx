@@ -5,16 +5,16 @@ const NOISE = `url("data:image/svg+xml;utf8,${encodeURIComponent(
 export function SkyBackdrop() {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-      <div className="sky-strip" />
+      <div className="sky-strip progress-sink" />
       <div
-        className="absolute inset-0"
+        className="progress-sink absolute inset-0"
         style={{
           backgroundImage: NOISE,
           opacity: 'calc(0.04 + var(--progress) * 0.1)',
         }}
       />
       <div
-        className="absolute inset-0"
+        className="progress-sink absolute inset-0"
         style={{
           background: 'radial-gradient(ellipse at center, transparent 52%, rgb(0 0 0 / 0.22) 100%)',
           opacity: 'calc(0.1 + var(--progress) * 0.5)',

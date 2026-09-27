@@ -1,5 +1,5 @@
 import { projects } from '../../data/content';
-import { Reveal } from '../ui/Reveal';
+import { Drift } from '../ui/Drift';
 import { Section } from '../ui/Section';
 import { ProjectCard } from './ProjectCard';
 
@@ -9,7 +9,7 @@ export function Projects() {
   return (
     <Section id="mesosphere" theme="dark" className="flex flex-col justify-center">
       <div className="mx-auto w-full max-w-6xl">
-        <Reveal>
+        <Drift>
           <p className="m-0 font-mono text-[0.68rem] uppercase tracking-[0.28em]" style={{ color: 'var(--ink-muted)' }}>
             Mesosphere
           </p>
@@ -19,15 +19,15 @@ export function Projects() {
           >
             Projects
           </h2>
-        </Reveal>
+        </Drift>
         <div className="grid gap-5 md:grid-cols-2">
-          <Reveal className="md:col-span-2">
+          <Drift className="md:col-span-2">
             <ProjectCard project={featured} featured />
-          </Reveal>
-          {rest.map((project, index) => (
-            <Reveal key={project.id} delay={80 + index * 80}>
+          </Drift>
+          {rest.map((project) => (
+            <Drift key={project.id}>
               <ProjectCard project={project} />
-            </Reveal>
+            </Drift>
           ))}
         </div>
       </div>
