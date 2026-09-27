@@ -12,7 +12,7 @@ export function CockpitHero() {
     <section
       id="cockpit-hero"
       tabIndex={-1}
-      className="flex min-h-0 min-w-0 flex-col justify-center outline-none md:-translate-y-[8%]"
+      className="flex min-h-0 min-w-0 flex-col justify-start outline-none md:pt-[3.25rem]"
       aria-label="Introduction"
     >
       <h1
@@ -22,7 +22,7 @@ export function CockpitHero() {
         {profile.name}
       </h1>
       <p
-        className="display mt-3 mb-0 max-w-full truncate text-[clamp(0.92rem,1.35vw,1rem)] italic leading-tight whitespace-nowrap"
+        className="display mt-3 mb-0 max-w-full text-[clamp(0.92rem,1.35vw,1rem)] italic leading-tight text-balance"
         style={{ color: 'var(--ink)' }}
       >
         {profile.title}

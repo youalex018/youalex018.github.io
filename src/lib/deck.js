@@ -25,7 +25,7 @@ export function timelineToDeck(items) {
     id: item.id,
     index,
     kind: 'experience',
-    eyebrow: item.date,
+    eyebrow: item.date?.replace(/\s*[—–-]\s*/, '–') ?? null,
     headline: item.org,
     secondary: item.role,
     description: item.highlights?.[0] ?? null,

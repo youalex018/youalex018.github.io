@@ -4,13 +4,6 @@
   --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", serif;
   --font-sans: "Instrument Sans", "Gill Sans", "Trebuchet MS", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
-
-  --color-dawn-gold: #fde68a;
-  --color-dawn-ember: #fb923c;
-  --color-sky-cerulean: #38bdf8;
-  --color-sky-deep: #0284c7;
-  --color-meso: #1e1b4b;
-  --color-void: #030712;
 }
 
 :root {
@@ -19,9 +12,7 @@
   --chrome-muted: #57534e;
   --mode-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --mode-duration: 900ms;
-  --limb-gold: #fde68a;
-  --limb-cyan: #38bdf8;
-  --cockpit-scale: 1;
+  --orbit-void: #050814;
   color-scheme: light;
 }
 
@@ -35,7 +26,7 @@ html[data-mode="orbit"] body,
 html[data-mode="orbit"] #root {
   height: 100%;
   overflow: hidden;
-  background: var(--color-void);
+  background: var(--orbit-void);
 }
 
 html.no-smooth {
@@ -89,12 +80,6 @@ button {
   color: inherit;
   cursor: pointer;
   background: transparent;
-  border: 0;
-}
-
-.btn-solid {
-  background: var(--ink);
-  color: var(--on-ink);
   border: 0;
 }
 
@@ -484,14 +469,6 @@ button {
   animation: drift 42s linear infinite;
 }
 
-.drift-med {
-  animation: drift 28s linear infinite reverse;
-}
-
-.orbit-sat {
-  animation: orbit 28s linear infinite;
-}
-
 .balloon-rise {
   transform: translate3d(0, calc(var(--progress) * -18vh), 0);
 }
@@ -519,15 +496,6 @@ button {
   }
   to {
     transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@keyframes orbit {
-  from {
-    transform: rotate(0deg) translateX(9rem) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(9rem) rotate(-360deg);
   }
 }
 
@@ -565,12 +533,13 @@ button {
   }
 }
 
-.horizon-limb {
+.orbit-backdrop {
+  background: var(--orbit-void);
   opacity: 0;
   transition: opacity var(--mode-duration) var(--mode-ease);
 }
 
-html[data-mode="orbit"] .horizon-limb {
+html[data-mode="orbit"] .orbit-backdrop {
   opacity: 1;
 }
 
@@ -579,11 +548,11 @@ html[data-mode="orbit"] .horizon-limb {
   inset: 0;
   z-index: 35;
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr);
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  padding: 4.5rem 1.25rem env(safe-area-inset-bottom, 0px);
+  padding: 4.5rem 1.25rem calc(1rem + env(safe-area-inset-bottom, 0px));
   color: var(--ink);
 }
 
@@ -726,7 +695,7 @@ html[data-mode="orbit"] .horizon-limb {
 
 @media (min-width: 768px) {
   .cockpit-shell {
-    padding: 4.75rem 2.5rem 0;
+    padding: 4.75rem 2.5rem 1.5rem;
   }
 }
 
@@ -743,7 +712,6 @@ html[data-mode="orbit"] .horizon-limb {
   }
 
   .cockpit-bio,
-  .cockpit-hint,
   .cockpit-skills {
     display: none;
   }
@@ -771,8 +739,6 @@ html[data-mode="orbit"] .horizon-limb {
 
   .cloud-band,
   .drift-slow,
-  .drift-med,
-  .orbit-sat,
   .scroll-cue-dot {
     animation: none !important;
   }
@@ -783,7 +749,7 @@ html[data-mode="orbit"] .horizon-limb {
     transition: none;
   }
 
-  .horizon-limb,
+  .orbit-backdrop,
   .seg-indicator,
   .view-exit,
   .view-enter,

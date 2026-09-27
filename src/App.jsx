@@ -1,7 +1,7 @@
 import { Aurora } from './components/background/Aurora';
 import { Clouds } from './components/background/Clouds';
-import { HorizonLimb } from './components/background/HorizonLimb';
 import { Nebula } from './components/background/Nebula';
+import { OrbitBackdrop } from './components/background/OrbitBackdrop';
 import { SkyBackdrop } from './components/background/SkyBackdrop';
 import { Starfield } from './components/background/Starfield';
 import { SiteHeader } from './components/chrome/SiteHeader';
@@ -11,8 +11,10 @@ import { useReducedMotion } from './hooks/useReducedMotion';
 import { useViewMode, ViewModeProvider } from './state/ViewModeContext';
 
 function AppShell() {
-  const { mode, progressRef } = useViewMode();
+  const { mode, leaving, phase, progressRef } = useViewMode();
   const reduced = useReducedMotion();
+  const orbitActive = mode === MODES.ORBIT || leaving === MODES.ORBIT;
+  const skyHidden = mode === MODES.ORBIT && phase === 'idle';
 
   return (
     <>
@@ -20,11 +22,11 @@ function AppShell() {
         Skip to content
       </a>
       <SkyBackdrop />
-      <Starfield progressRef={progressRef} reduced={reduced} />
+      <Starfield progressRef={progressRef} reduced={reduced} paused={skyHidden} />
       <Clouds />
       <Aurora />
       <Nebula />
-      <HorizonLimb />
+      <OrbitBackdrop active={orbitActive} reduced={reduced} />
       <SiteHeader />
       <ViewStage />
     </>

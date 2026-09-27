@@ -23,13 +23,13 @@ function seedStars(width, height, count) {
   return stars;
 }
 
-export function Starfield({ progressRef, reduced }) {
+export function Starfield({ progressRef, reduced, paused = false }) {
   const canvasRef = useRef(null);
   const pointerRef = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return undefined;
+    if (!canvas || paused) return undefined;
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return undefined;
 
@@ -170,7 +170,7 @@ export function Starfield({ progressRef, reduced }) {
       window.removeEventListener('pointermove', onPointer);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [progressRef, reduced]);
+  }, [progressRef, reduced, paused]);
 
   return (
     <canvas

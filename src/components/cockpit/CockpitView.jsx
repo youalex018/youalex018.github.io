@@ -1,5 +1,4 @@
 import { CockpitHero } from './CockpitHero';
-import { CockpitStatusStrip } from './CockpitStatusStrip';
 import { ContentDeck } from './ContentDeck';
 
 export function CockpitView({ className = '', inert: isInert = false }) {
@@ -13,7 +12,6 @@ export function CockpitView({ className = '', inert: isInert = false }) {
         <CockpitHero />
         <ContentDeck />
       </div>
-      <CockpitStatusStrip />
     </div>
   );
 }

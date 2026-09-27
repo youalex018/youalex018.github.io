@@ -37,12 +37,6 @@ export function Aurora() {
             </g>
           </svg>
         </div>
-
-        <div className="absolute left-1/2 top-[28%] h-0 w-0">
-          <div className="orbit-sat h-3 w-5 rounded-[2px] bg-slate-200/90 shadow-[0_0_12px_rgba(248,250,252,0.7)]">
-            <span className="absolute top-1/2 left-1/2 h-px w-7 -translate-x-1/2 -translate-y-1/2 bg-slate-100/70" />
-          </div>
-        </div>
       </div>
     </div>
   );
