@@ -1,3 +1,3 @@
 # youalex018.github.io
 
-Personal Porfolio website
+Alex You's personal portfolio website

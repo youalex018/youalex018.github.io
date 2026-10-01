@@ -7,11 +7,11 @@ function hexToRgb(hex) {
   ];
 }
 
-export function lerp(a, b, t) {
+function lerp(a, b, t) {
   return a + (b - a) * t;
 }
 
-export function lerpColor(from, to, t) {
+function lerpColor(from, to, t) {
   const a = hexToRgb(from);
   const b = hexToRgb(to);
   const clamped = Math.min(1, Math.max(0, t));

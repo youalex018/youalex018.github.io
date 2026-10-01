@@ -21,20 +21,12 @@
   <script>
     (function () {
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-      var DEFAULT_MODE = 'orbit';
-      var STORAGE_KEY = 'alex:view-mode';
-      var params = new URLSearchParams(location.search);
-      var fromUrl = params.get('view');
-      var mode = fromUrl === 'ascent' || fromUrl === 'orbit' ? fromUrl : null;
-      if (!mode) {
-        try { mode = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+      if (location.pathname === '/writing' || location.pathname.indexOf('/writing/') === 0) {
+        document.documentElement.dataset.surface = 'writing';
       }
-      if (mode !== 'ascent' && mode !== 'orbit') mode = DEFAULT_MODE;
-      document.documentElement.dataset.mode = mode;
-      if (mode === 'orbit') {
-        document.documentElement.style.setProperty('--chrome-ink', '#f8fafc');
-        document.documentElement.style.setProperty('--chrome-muted', '#e2e8f0');
-      }
+      document.documentElement.dataset.mode = 'orbit';
+      document.documentElement.style.setProperty('--chrome-ink', '#f8fafc');
+      document.documentElement.style.setProperty('--chrome-muted', '#e2e8f0');
     })();
   </script>
   <noscript>You need to enable JavaScript to run this app.</noscript>

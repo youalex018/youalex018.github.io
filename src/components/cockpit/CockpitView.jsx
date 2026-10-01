@@ -8,7 +8,7 @@ export function CockpitView({ className = '', inert: isInert = false }) {
       data-theme="dark"
       inert={isInert || undefined}
     >
-      <div className="cockpit-stagger mx-auto grid h-full min-h-0 w-full max-w-7xl min-w-0 grid-rows-[auto_minmax(0,1fr)] gap-4 md:grid-cols-[minmax(0,0.38fr)_minmax(0,0.62fr)] md:grid-rows-1 md:gap-6 lg:grid-cols-[minmax(0,0.42fr)_minmax(0,0.58fr)] lg:gap-8">
+      <div className="cockpit-stagger grid h-full min-h-0 w-full min-w-0 grid-rows-[auto_minmax(0,1fr)] gap-4 md:grid-cols-2 md:grid-rows-1 md:gap-x-8">
         <CockpitHero />
         <ContentDeck />
       </div>

@@ -9,6 +9,9 @@ export const TABS = {
 };
 
 export const DEFAULT_MODE = MODES.ORBIT;
+
+/** Ascent stays in the codebase, but the site opens in orbit until it returns. */
+export const ASCENT_ENABLED = false;
 export const STORAGE_KEY = 'alex:view-mode';
 export const URL_PARAM = 'view';
 
@@ -31,7 +34,7 @@ export function readModeFromSearch(search) {
 }
 
 export function resolveInitialMode() {
-  if (typeof window === 'undefined') return DEFAULT_MODE;
+  if (!ASCENT_ENABLED || typeof window === 'undefined') return DEFAULT_MODE;
   const fromUrl = readModeFromSearch(window.location.search);
   if (fromUrl) return fromUrl;
   try {

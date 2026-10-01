@@ -4,26 +4,28 @@ import { ProjectPreview } from '../ui/ProjectPreview';
 
 function ExperienceRow({ item }) {
   return (
-    <article className="deck-item grid items-baseline gap-x-6 py-4 sm:grid-cols-[8.5rem_minmax(0,1fr)]">
-      <p className="m-0 text-[0.8rem] tabular-nums" style={{ color: 'var(--ink-muted)', opacity: 0.8 }}>
-        {item.eyebrow}
-      </p>
-      <h3
-        className="display mt-1 mb-0 text-[clamp(1.25rem,2.8vmin,1.85rem)] leading-[1.12] font-medium sm:mt-0"
-        style={{ color: 'var(--ink)' }}
-      >
-        {item.headline}
-      </h3>
+    <article className="deck-item py-4">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <h3
+          className="display m-0 text-[clamp(1.25rem,2.8vmin,1.85rem)] leading-[1.12] font-medium"
+          style={{ color: 'var(--ink)' }}
+        >
+          {item.headline}
+        </h3>
+        <p className="m-0 text-[0.8rem] tabular-nums" style={{ color: 'var(--ink-muted)', opacity: 0.8 }}>
+          {item.eyebrow}
+        </p>
+      </div>
       {item.secondary ? (
         <p
-          className="mt-1 mb-0 text-[clamp(0.95rem,2vmin,1.15rem)] leading-snug font-medium sm:col-start-2"
+          className="mt-1 mb-0 text-[clamp(0.95rem,2vmin,1.15rem)] leading-snug font-medium"
           style={{ color: 'var(--ink)' }}
         >
           {item.secondary}
         </p>
       ) : null}
       {item.description ? (
-        <p className="mt-1.5 mb-0 text-sm leading-relaxed sm:col-start-2" style={{ color: 'var(--ink-muted)' }}>
+        <p className="mt-1.5 mb-0 text-sm leading-relaxed" style={{ color: 'var(--ink-muted)' }}>
           {item.description}
         </p>
       ) : null}

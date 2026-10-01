@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
+  ASCENT_ENABLED,
   COCKPIT_PROGRESS,
   LAYER_TO_TAB,
   MODES,
@@ -56,6 +57,7 @@ export function ViewModeProvider({ children }) {
   const setMode = useCallback(
     async (next) => {
       if (next !== MODES.ASCENT && next !== MODES.ORBIT) return;
+      if (!ASCENT_ENABLED && next === MODES.ASCENT) return;
       if (next === modeRef.current || switchingRef.current) return;
 
       switchingRef.current = true;
@@ -100,10 +102,6 @@ export function ViewModeProvider({ children }) {
     [tweenTo],
   );
 
-  const toggleMode = useCallback(() => {
-    void setMode(modeRef.current === MODES.ORBIT ? MODES.ASCENT : MODES.ORBIT);
-  }, [setMode]);
-
   const navigate = useCallback(
     (layerId) => {
       if (modeRef.current === MODES.ASCENT) {
@@ -127,7 +125,6 @@ export function ViewModeProvider({ children }) {
     () => ({
       mode,
       setMode,
-      toggleMode,
       phase,
       leaving,
       tab,
@@ -136,7 +133,7 @@ export function ViewModeProvider({ children }) {
       progressRef,
       savedProgress,
     }),
-    [mode, setMode, toggleMode, phase, leaving, tab, setTab, navigate],
+    [mode, setMode, phase, leaving, tab, setTab, navigate],
   );
 
   return <ViewModeContext.Provider value={value}>{children}</ViewModeContext.Provider>;

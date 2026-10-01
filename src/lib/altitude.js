@@ -15,8 +15,3 @@ export function formatAltitude(km) {
   }
   return `${Math.round(km).toLocaleString('en-US')} km`;
 }
-
-export function layerForProgress(progress) {
-  const p = Math.min(1, Math.max(0, progress));
-  return LAYERS.find((layer) => p <= layer.progress[1]) ?? LAYERS[LAYERS.length - 1];
-}

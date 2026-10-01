@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { navigate } from '../../writing/route';
 
 const VOID = '#050814';
 const ABYSS = '11, 18, 36';
@@ -75,8 +76,13 @@ function pointOnRing(geo, ring, theta, ox, oy) {
   };
 }
 
+const HOVER_SCALE = 1.16;
+
 export function OrbitBackdrop({ active, reduced }) {
   const canvasRef = useRef(null);
+  const wellRef = useRef(null);
+  const hoverRef = useRef(false);
+  const pokeRef = useRef(() => {});
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -93,6 +99,7 @@ export function OrbitBackdrop({ active, reduced }) {
     let stars = [];
     let frame = 0;
     let running = false;
+    let bodyScale = 1;
 
     const pointer = {
       x: 0,
@@ -145,10 +152,19 @@ export function OrbitBackdrop({ active, reduced }) {
       });
     };
 
-    const drawPlanet = (ox, oy) => {
+    const placeWell = (x, y, radius, scale) => {
+      const well = wellRef.current;
+      if (!well) return;
+      const size = radius * 2;
+      well.style.width = `${size}px`;
+      well.style.height = `${size}px`;
+      well.style.transform = `translate3d(${x - radius}px, ${y - radius}px, 0) scale(${scale})`;
+    };
+
+    const drawPlanet = (ox, oy, scale) => {
       const x = geo.cx + ox;
       const y = geo.cy + oy;
-      const r = geo.radius;
+      const r = geo.radius * scale;
 
       const halo = ctx.createRadialGradient(x, y, r, x, y, r * 1.7);
       halo.addColorStop(0, `rgba(${CHART}, 0.1)`);
@@ -175,6 +191,7 @@ export function OrbitBackdrop({ active, reduced }) {
       ctx.beginPath();
       ctx.arc(x, y, r - 0.6, -Math.PI * 0.82, Math.PI * 0.08);
       ctx.stroke();
+      placeWell(x, y, geo.radius, scale);
     };
 
     const drawBody = (theta, ox, oy) => {
@@ -281,10 +298,12 @@ export function OrbitBackdrop({ active, reduced }) {
       const light = presence * (0.35 + 0.65 * Math.min(1, pointer.energy));
       const theta = animated ? BODY_PARKED + (time / BODY_PERIOD_MS) * Math.PI * 2 : BODY_PARKED;
       const bodyInFront = Math.sin(theta) > 0;
+      const targetScale = hoverRef.current ? HOVER_SCALE : 1;
+      bodyScale += (targetScale - bodyScale) * (animated ? 0.14 : 1);
 
       strokeRings(Math.PI, Math.PI * 2, ox, oy, light);
       if (!bodyInFront) drawBody(theta, ox, oy);
-      drawPlanet(ox, oy);
+      drawPlanet(ox, oy, bodyScale);
       strokeRings(0, Math.PI, ox, oy, light);
       if (bodyInFront) drawBody(theta, ox, oy);
 
@@ -338,6 +357,10 @@ export function OrbitBackdrop({ active, reduced }) {
       else start();
     };
 
+    pokeRef.current = () => {
+      if (!running) draw(performance.now());
+    };
+
     resize();
     draw(0);
     start();
@@ -350,6 +373,7 @@ export function OrbitBackdrop({ active, reduced }) {
     }
 
     return () => {
+      pokeRef.current = () => {};
       stop();
       window.removeEventListener('resize', onResize);
       document.removeEventListener('visibilitychange', onVisibility);
@@ -359,8 +383,27 @@ export function OrbitBackdrop({ active, reduced }) {
   }, [active, reduced]);
 
   return (
-    <div className="orbit-backdrop pointer-events-none fixed inset-0 z-[4]" aria-hidden="true">
-      <canvas ref={canvasRef} className="block" />
-    </div>
+    <>
+      <div className="orbit-backdrop pointer-events-none fixed inset-0 z-[4]" aria-hidden="true">
+        <canvas ref={canvasRef} className="block" />
+      </div>
+      {active ? (
+        <button
+          ref={wellRef}
+          type="button"
+          className="orbit-well"
+          aria-label="Writing"
+          onClick={() => navigate('/writing')}
+          onPointerEnter={() => {
+            hoverRef.current = true;
+            pokeRef.current();
+          }}
+          onPointerLeave={() => {
+            hoverRef.current = false;
+            pokeRef.current();
+          }}
+        />
+      ) : null}
+    </>
   );
 }

@@ -5,12 +5,14 @@ export function Timeline({ items }) {
         <li key={item.id} className="relative mb-4 last:mb-0">
           <span className="absolute top-5 -left-[1.7rem] h-2.5 w-2.5 rounded-full border border-current bg-current shadow-[0_0_12px_currentColor]" />
           <article className="glass rounded-2xl p-5 sm:p-6">
-            <p className="m-0 font-mono text-[0.65rem] uppercase tracking-[0.2em]" style={{ color: 'var(--ink-muted)' }}>
-              {item.date}
-            </p>
-            <h3 className="display mt-2 mb-0 text-2xl leading-tight font-medium" style={{ color: 'var(--ink)' }}>
-              {item.role}
-            </h3>
+            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <h3 className="display m-0 text-2xl leading-tight font-medium" style={{ color: 'var(--ink)' }}>
+                {item.role}
+              </h3>
+              <p className="m-0 font-mono text-[0.65rem] uppercase tracking-[0.2em]" style={{ color: 'var(--ink-muted)' }}>
+                {item.date}
+              </p>
+            </div>
             <p className="mt-1 mb-0" style={{ color: 'var(--ink-muted)' }}>
               {item.org}
             </p>

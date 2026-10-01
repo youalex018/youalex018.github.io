@@ -179,13 +179,13 @@ button {
 .project-preview {
   position: relative;
   display: block;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 5 / 4;
   margin-block-start: 0;
   margin-inline: 0;
   overflow: hidden;
   border-radius: 0.75rem;
   isolation: isolate;
-  background: #030712;
+  background: #000;
   cursor: default;
   box-shadow:
     inset 0 0 0 1px color-mix(in oklab, var(--ink) 16%, transparent),
@@ -200,21 +200,22 @@ button {
 .project-preview video {
   position: absolute;
   inset: 0;
-  display: block;
   width: 100%;
   height: 100%;
-  max-width: none;
-  object-fit: cover;
+  object-fit: contain;
+  background: #000;
 }
 
 .project-preview video {
-  z-index: 1;
-  opacity: 0;
-  transition: opacity 280ms ease;
+  display: none;
+}
+
+.project-preview.is-live img {
+  display: none;
 }
 
 .project-preview.is-live video {
-  opacity: 1;
+  display: block;
 }
 
 .project-preview-hud {
@@ -631,12 +632,49 @@ html[data-mode="orbit"] .orbit-backdrop {
   color: var(--ink);
 }
 
+.orbit-well {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 38;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  transform-origin: center;
+}
+
+.orbit-well:focus-visible {
+  outline: 2px solid rgb(244 213 141 / 0.85);
+  outline-offset: 6px;
+}
+
 .mode-toggle {
   position: relative;
   grid-template-columns: 1fr 1fr;
   padding: 3px;
   border-radius: 999px;
   color: var(--ink, #f8fafc);
+}
+
+.portfolio-handoff {
+  pointer-events: none;
+}
+
+.portfolio-handoff .cockpit-shell,
+.portfolio-handoff header {
+  animation: writing-handoff-out 280ms var(--mode-ease) both;
+}
+
+@keyframes writing-handoff-out {
+  to {
+    opacity: 0;
+    transform: translate3d(0, -12px, 0);
+  }
 }
 
 .seg-indicator {
@@ -829,6 +867,8 @@ html[data-mode="orbit"] .orbit-backdrop {
 
   .orbit-backdrop,
   .seg-indicator,
+  .portfolio-handoff .cockpit-shell,
+  .portfolio-handoff header,
   .view-exit,
   .view-enter,
   .expedition-exit,

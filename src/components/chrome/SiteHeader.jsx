@@ -5,12 +5,13 @@ import { MODES } from '../../data/modes';
 import { useActiveLayer } from '../../hooks/useActiveLayer';
 import { useViewMode } from '../../state/ViewModeContext';
 import { socials } from '../../data/content';
+import { RouteLink } from '../../writing/route';
 
 const LINKS = [
   { id: 'troposphere', label: 'Alex You' },
   { id: 'stratosphere', label: 'About me' },
-  { id: 'thermosphere', label: 'Experience' },
   { id: 'mesosphere', label: 'Projects' },
+  { id: 'thermosphere', label: 'Experience' },
 ];
 
 export function SiteHeader() {
@@ -18,15 +19,7 @@ export function SiteHeader() {
   const { mode, navigate } = useViewMode();
   const inOrbit = mode === MODES.ORBIT;
 
-  if (inOrbit) {
-    return (
-      <header className="pointer-events-none fixed top-0 right-0 left-0 z-40">
-        <div className="pointer-events-auto flex justify-end px-4 py-4 sm:px-6">
-          <ModeToggle />
-        </div>
-      </header>
-    );
-  }
+  if (inOrbit) return null;
 
   return (
     <header className="chrome-sink pointer-events-none fixed top-0 right-0 left-0 z-40">
@@ -66,6 +59,13 @@ export function SiteHeader() {
                 </button>
               );
             })}
+            <RouteLink
+              href="/writing"
+              className="focus-ring rounded-full px-2.5 py-1.5 font-mono text-[0.62rem] uppercase tracking-[0.18em] no-underline opacity-70 transition hover:opacity-100 sm:px-3.5 sm:text-[0.68rem]"
+              style={{ color: 'var(--chrome-ink)' }}
+            >
+              Writing
+            </RouteLink>
           </div>
         </div>
         <div className="flex shrink-0 items-center gap-2">

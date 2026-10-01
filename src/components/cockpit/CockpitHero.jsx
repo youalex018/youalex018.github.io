@@ -12,7 +12,7 @@ export function CockpitHero() {
     <section
       id="cockpit-hero"
       tabIndex={-1}
-      className="flex min-h-0 min-w-0 flex-col justify-start outline-none md:pt-[3.25rem]"
+      className="flex min-h-0 min-w-0 flex-col justify-start outline-none md:w-full md:max-w-lg md:justify-self-end md:pt-[3.25rem]"
       aria-label="Introduction"
     >
       <h1

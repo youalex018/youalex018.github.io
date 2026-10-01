@@ -23,7 +23,7 @@ export function ContentDeck() {
     <section
       id="cockpit-deck"
       tabIndex={-1}
-      className="deck-shell focus-ring grid h-full min-h-0 min-w-0 grid-rows-[auto_minmax(0,1fr)] outline-none"
+      className="deck-shell focus-ring grid h-full min-h-0 w-full min-w-0 grid-rows-[auto_minmax(0,1fr)] outline-none md:max-w-lg md:justify-self-start"
       aria-label="Projects and experience deck"
     >
       <DeckTabs tab={tab} onChange={setTab} />
