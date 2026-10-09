@@ -60,11 +60,11 @@ export function SiteHeader() {
               );
             })}
             <RouteLink
-              href="/writing"
+              href="/notes"
               className="focus-ring rounded-full px-2.5 py-1.5 font-mono text-[0.62rem] uppercase tracking-[0.18em] no-underline opacity-70 transition hover:opacity-100 sm:px-3.5 sm:text-[0.68rem]"
               style={{ color: 'var(--chrome-ink)' }}
             >
-              Writing
+              Notes
             </RouteLink>
           </div>
         </div>

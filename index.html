@@ -21,7 +21,12 @@
   <script>
     (function () {
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-      if (location.pathname === '/writing' || location.pathname.indexOf('/writing/') === 0) {
+      var path = location.pathname;
+      if (path === '/writing' || path.indexOf('/writing/') === 0) {
+        path = '/notes' + path.slice('/writing'.length);
+        history.replaceState(null, '', path + location.search + location.hash);
+      }
+      if (path === '/notes' || path.indexOf('/notes/') === 0) {
         document.documentElement.dataset.surface = 'writing';
       }
       document.documentElement.dataset.mode = 'orbit';

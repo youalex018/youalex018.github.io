@@ -58,7 +58,25 @@ export function persistMode(mode) {
   } catch {
     /* private mode */
   }
+
   const url = new URL(window.location.href);
-  url.searchParams.set(URL_PARAM, mode);
-  window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+  const onWriting = url.pathname === '/notes' || url.pathname.startsWith('/notes/');
+  // Orbit is the default, so the address stays bare. Notes is /notes.
+  const showInUrl = ASCENT_ENABLED && !onWriting && mode !== DEFAULT_MODE;
+
+  if (showInUrl) {
+    if (url.searchParams.get(URL_PARAM) === mode) return;
+    url.searchParams.set(URL_PARAM, mode);
+  } else if (url.searchParams.has(URL_PARAM)) {
+    url.searchParams.delete(URL_PARAM);
+  } else {
+    return;
+  }
+
+  const search = url.searchParams.toString();
+  const next = `${url.pathname}${search ? `?${search}` : ''}${url.hash}`;
+  const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+  if (next !== current) {
+    window.history.replaceState(null, '', next);
+  }
 }

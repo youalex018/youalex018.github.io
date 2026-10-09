@@ -48,7 +48,7 @@ function PortfolioApp() {
 
 function App() {
   const pathname = usePathname();
-  const isWriting = pathname === '/writing' || pathname.startsWith('/writing/');
+  const isWriting = pathname === '/notes' || pathname.startsWith('/notes/');
   const reduced = useReducedMotion();
   const fromPortfolio = useRef(false);
   const [handoff, setHandoff] = useState(false);

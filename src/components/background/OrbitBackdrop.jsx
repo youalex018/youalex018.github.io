@@ -392,8 +392,8 @@ export function OrbitBackdrop({ active, reduced }) {
           ref={wellRef}
           type="button"
           className="orbit-well"
-          aria-label="Writing"
-          onClick={() => navigate('/writing')}
+          aria-label="Notes"
+          onClick={() => navigate('/notes')}
           onPointerEnter={() => {
             hoverRef.current = true;
             pokeRef.current();

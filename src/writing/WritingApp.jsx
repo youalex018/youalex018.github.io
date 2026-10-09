@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect } from 'react';
 import { CloudLogo } from '../components/chrome/CloudLogo';
+import { URL_PARAM } from '../data/modes';
 import { formatPostDate, getPost, posts } from './posts';
 import { RouteLink, usePathname } from './route';
 import './writing.css';
@@ -16,9 +17,9 @@ function BackArrow() {
 function WritingHeader({ back = false }) {
   return (
     <header className="writing-header">
-      <nav className="writing-nav" aria-label="Writing">
+      <nav className="writing-nav" aria-label="Notes">
         {back ? (
-          <RouteLink className="writing-back focus-ring" href="/writing" aria-label="Back to writing">
+          <RouteLink className="writing-back focus-ring" href="/notes" aria-label="Back to notes">
             <BackArrow />
           </RouteLink>
         ) : null}
@@ -33,13 +34,13 @@ function WritingHeader({ back = false }) {
 
 function WritingIndex() {
   useEffect(() => {
-    document.title = 'Alex You | Writing';
+    document.title = 'Alex You | Notes';
   }, []);
 
   return (
     <main className="writing-index" id="writing-main">
       <div className="writing-index-intro">
-        <h1>Writing</h1>
+        <h1>Notes</h1>
         <p>{`Stuff I write when I should be locked in...\n`}
           {`Locking in currently`}
         </p>
@@ -49,7 +50,7 @@ function WritingIndex() {
         <ol className="writing-list">
           {posts.map((post, index) => (
             <li key={post.slug}>
-              <RouteLink className="writing-card focus-ring" href={`/writing/${post.slug}`}>
+              <RouteLink className="writing-card focus-ring" href={`/notes/${post.slug}`}>
                 <span className="writing-card-number" aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
                 </span>
@@ -87,7 +88,7 @@ function Article({ post }) {
         </header>
         <div className="article-prose" dangerouslySetInnerHTML={{ __html: post.html }} />
         <footer className="article-footer">
-          <RouteLink className="focus-ring" href="/writing">Back to writing</RouteLink>
+          <RouteLink className="focus-ring" href="/notes">Back to notes</RouteLink>
         </footer>
       </article>
     </main>
@@ -103,8 +104,8 @@ function MissingPiece() {
     <main className="writing-missing" id="writing-main">
       <p className="writing-kicker">Signal lost · 404</p>
       <h1>This piece drifted out of range</h1>
-      <RouteLink className="writing-back-link focus-ring" href="/writing">
-        Return to writing
+      <RouteLink className="writing-back-link focus-ring" href="/notes">
+        Return to notes
       </RouteLink>
     </main>
   );
@@ -112,11 +113,17 @@ function MissingPiece() {
 
 export default function WritingApp({ entering = false }) {
   const pathname = usePathname();
-  const slug = pathname.replace(/^\/writing\/?/, '').replace(/\/$/, '');
+  const slug = pathname.replace(/^\/notes\/?/, '').replace(/\/$/, '');
   const post = slug ? getPost(decodeURIComponent(slug)) : null;
 
   useLayoutEffect(() => {
     document.documentElement.dataset.surface = 'writing';
+    const url = new URL(window.location.href);
+    if (url.searchParams.has(URL_PARAM)) {
+      url.searchParams.delete(URL_PARAM);
+      const search = url.searchParams.toString();
+      window.history.replaceState(null, '', `${url.pathname}${search ? `?${search}` : ''}${url.hash}`);
+    }
     return () => {
       delete document.documentElement.dataset.surface;
       document.title = 'Alex You | Portfolio';
