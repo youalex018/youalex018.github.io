@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { TABS } from '../../data/modes';
 import { projects, timeline } from '../../data/content';
 import { projectsToDeck, timelineToDeck } from '../../lib/deck';
@@ -8,6 +8,8 @@ import { DeckTabs } from './DeckTabs';
 
 export function ContentDeck() {
   const { tab, setTab } = useViewMode();
+  const [open, setOpen] = useState({ tab, id: null });
+  const openId = open.tab === tab ? open.id : null;
 
   const decks = useMemo(
     () => ({
@@ -36,7 +38,11 @@ export function ContentDeck() {
         <ul className="m-0 flex list-none flex-col divide-y divide-current/10 p-0">
           {items.map((item) => (
             <li key={item.id}>
-              <DeckCard item={item} />
+              <DeckCard
+                item={item}
+                open={openId === item.id}
+                onToggle={() => setOpen({ tab, id: openId === item.id ? null : item.id })}
+              />
             </li>
           ))}
         </ul>

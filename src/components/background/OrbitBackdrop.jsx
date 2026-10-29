@@ -20,6 +20,14 @@ const LENS_PULL = 10;
 const LIGHT_RADIUS = 220;
 const POINTER_RING = { rx: 18, ry: 6.5, periodMs: 2200 };
 
+const DUST_MARGIN = 12;
+const DUST_PARALLAX = 6;
+const DRIFT_SHARE = 0.4;
+const WRAP_MARGIN = 24;
+const MAX_DT = 50;
+const METEOR_LIFE_MS = 900;
+const METEOR_SPEED = 520;
+
 function mulberry32(seed) {
   let a = seed;
   return () => {
@@ -33,20 +41,60 @@ function mulberry32(seed) {
 
 function seedStars(width, height, isMobile) {
   const rand = mulberry32(1540);
-  const base = Math.round((width * height) / 9000);
-  const count = Math.round(Math.min(200, Math.max(80, base)) * (isMobile ? 0.6 : 1));
+  const base = Math.round((width * height) / 7000);
+  const count = Math.round(Math.min(260, Math.max(90, base)) * (isMobile ? 0.6 : 1));
   const stars = [];
   for (let i = 0; i < count; i += 1) {
     const bright = rand() < 0.06;
+    const depth = 0.3 + rand() * 0.7;
+    const heading = TILT + (rand() - 0.5) * 0.5;
+    const speed = rand() < DRIFT_SHARE ? (1.5 + rand() * 4.5) * depth : 0;
     stars.push({
       x: rand() * width,
       y: rand() * height,
       r: bright ? 1.2 + rand() * 0.4 : 0.3 + rand() * 0.8,
       a: bright ? 0.7 + rand() * 0.2 : 0.15 + rand() * 0.35,
-      depth: 0.3 + rand() * 0.7,
+      depth,
+      vx: (Math.cos(heading) * speed) / 1000,
+      vy: (Math.sin(heading) * speed) / 1000,
+      twinkle: bright ? (Math.PI * 2) / (3000 + rand() * 4000) : 0,
+      phase: rand() * Math.PI * 2,
     });
   }
   return stars;
+}
+
+/** Void, lift gradient and far dust, painted once per resize. */
+function paintBackdrop(width, height, dpr, geo) {
+  const canvas = document.createElement('canvas');
+  const w = width + DUST_MARGIN * 2;
+  const h = height + DUST_MARGIN * 2;
+  canvas.width = Math.floor(w * dpr);
+  canvas.height = Math.floor(h * dpr);
+  const ctx = canvas.getContext('2d', { alpha: false });
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  ctx.fillStyle = VOID;
+  ctx.fillRect(0, 0, w, h);
+  const cx = geo.cx + DUST_MARGIN;
+  const cy = geo.cy + DUST_MARGIN;
+  const lift = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(width, height) * 0.7);
+  lift.addColorStop(0, `rgba(${ABYSS}, 1)`);
+  lift.addColorStop(1, `rgba(${ABYSS}, 0)`);
+  ctx.fillStyle = lift;
+  ctx.fillRect(0, 0, w, h);
+
+  const rand = mulberry32(2207);
+  const base = Math.round((w * h) / 2600);
+  const count = Math.round(Math.min(650, Math.max(160, base)) * (geo.isMobile ? 0.55 : 1));
+  ctx.fillStyle = `rgb(${STARLIGHT})`;
+  for (let i = 0; i < count; i += 1) {
+    const size = (0.25 + rand() * 0.35) * 2;
+    ctx.globalAlpha = 0.08 + rand() * 0.2;
+    ctx.fillRect(rand() * w, rand() * h, size, size);
+  }
+  ctx.globalAlpha = 1;
+  return canvas;
 }
 
 function layout(width, height) {
@@ -97,9 +145,14 @@ export function OrbitBackdrop({ active, reduced }) {
     let height = 0;
     let geo = null;
     let stars = [];
+    let backdrop = null;
     let frame = 0;
+    let resizeFrame = 0;
     let running = false;
     let bodyScale = 1;
+    let lastTime = null;
+
+    const meteor = { active: false, start: 0, next: 0, x: 0, y: 0, dx: 0, dy: 0, len: 0 };
 
     const pointer = {
       x: 0,
@@ -117,9 +170,9 @@ export function OrbitBackdrop({ active, reduced }) {
     };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
       height = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, width < 768 ? 1.5 : 2);
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       canvas.style.width = `${width}px`;
@@ -127,6 +180,7 @@ export function OrbitBackdrop({ active, reduced }) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       geo = layout(width, height);
       stars = seedStars(width, height, geo.isMobile);
+      backdrop = paintBackdrop(width, height, dpr, geo);
     };
 
     const ringLight = (strength) => {
@@ -137,19 +191,69 @@ export function OrbitBackdrop({ active, reduced }) {
       return grad;
     };
 
-    const strokeRings = (start, end, ox, oy, lightStrength) => {
+    const strokeRings = (start, end, ox, oy, lightGrad) => {
       geo.rings.forEach((ring) => {
         ctx.beginPath();
         ctx.ellipse(geo.cx + ox, geo.cy + oy, ring.rx, ring.ry, TILT, start, end);
         ctx.lineWidth = 1;
         ctx.strokeStyle = `rgba(${CHART}, ${ring.alpha})`;
         ctx.stroke();
-        if (lightStrength > 0.01) {
+        if (lightGrad) {
           ctx.lineWidth = 1.4;
-          ctx.strokeStyle = ringLight(lightStrength);
+          ctx.strokeStyle = lightGrad;
           ctx.stroke();
         }
       });
+    };
+
+    const scheduleMeteor = (time) => {
+      meteor.next = time + 25000 + Math.random() * 15000;
+    };
+
+    const launchMeteor = (time) => {
+      const angle = Math.PI * 0.8 + Math.random() * 0.12;
+      meteor.active = true;
+      meteor.start = time;
+      meteor.x = width * (geo.isMobile ? 0.25 + Math.random() * 0.65 : 0.5 + Math.random() * 0.45);
+      meteor.y = height * (geo.isMobile ? 0.32 + Math.random() * 0.23 : 0.05 + Math.random() * 0.3);
+      meteor.dx = Math.cos(angle);
+      meteor.dy = Math.sin(angle);
+      meteor.len = 90 + Math.random() * 50;
+    };
+
+    const drawMeteor = (time) => {
+      if (!meteor.next) {
+        scheduleMeteor(time);
+        return;
+      }
+      if (!meteor.active) {
+        if (time >= meteor.next) launchMeteor(time);
+        else return;
+      }
+      const elapsed = time - meteor.start;
+      const p = elapsed / METEOR_LIFE_MS;
+      if (p >= 1) {
+        meteor.active = false;
+        scheduleMeteor(time);
+        return;
+      }
+      const travel = (elapsed / 1000) * METEOR_SPEED;
+      const hx = meteor.x + meteor.dx * travel;
+      const hy = meteor.y + meteor.dy * travel;
+      const tail = meteor.len * Math.min(1, p * 3);
+      const tx = hx - meteor.dx * tail;
+      const ty = hy - meteor.dy * tail;
+      const alpha = 0.5 * Math.sin(p * Math.PI);
+      const grad = ctx.createLinearGradient(tx, ty, hx, hy);
+      grad.addColorStop(0, `rgba(${STARLIGHT}, 0)`);
+      grad.addColorStop(1, `rgba(${STARLIGHT}, ${alpha})`);
+      ctx.lineWidth = 1.2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(tx, ty);
+      ctx.lineTo(hx, hy);
+      ctx.stroke();
     };
 
     const placeWell = (x, y, radius, scale) => {
@@ -259,21 +363,35 @@ export function OrbitBackdrop({ active, reduced }) {
         pointer.energy *= 0.96;
       }
 
-      ctx.fillStyle = VOID;
-      ctx.fillRect(0, 0, width, height);
+      const dt = animated && lastTime !== null ? Math.min(MAX_DT, Math.max(0, time - lastTime)) : 0;
+      if (animated) lastTime = time;
 
-      const lift = ctx.createRadialGradient(geo.cx, geo.cy, 0, geo.cx, geo.cy, Math.max(width, height) * 0.7);
-      lift.addColorStop(0, `rgba(${ABYSS}, 1)`);
-      lift.addColorStop(1, `rgba(${ABYSS}, 0)`);
-      ctx.fillStyle = lift;
-      ctx.fillRect(0, 0, width, height);
+      ctx.drawImage(
+        backdrop,
+        pointer.snx * DUST_PARALLAX - DUST_MARGIN,
+        pointer.sny * DUST_PARALLAX - DUST_MARGIN,
+        width + DUST_MARGIN * 2,
+        height + DUST_MARGIN * 2,
+      );
 
       const presence = interactive ? pointer.presence : 0;
+      const spanX = width + WRAP_MARGIN * 2;
+      const spanY = height + WRAP_MARGIN * 2;
       ctx.fillStyle = `rgb(${STARLIGHT})`;
       stars.forEach((star) => {
+        if (dt && (star.vx || star.vy)) {
+          star.x += star.vx * dt;
+          star.y += star.vy * dt;
+          if (star.x > width + WRAP_MARGIN) star.x -= spanX;
+          else if (star.x < -WRAP_MARGIN) star.x += spanX;
+          if (star.y > height + WRAP_MARGIN) star.y -= spanY;
+          else if (star.y < -WRAP_MARGIN) star.y += spanY;
+        }
         let x = star.x + pointer.snx * star.depth * 20;
         let y = star.y + pointer.sny * star.depth * 20;
-        let a = star.a;
+        let a = star.twinkle && animated
+          ? star.a * (0.78 + 0.22 * Math.sin(time * star.twinkle + star.phase))
+          : star.a;
         if (presence > 0.01) {
           const dx = pointer.sx - x;
           const dy = pointer.sy - y;
@@ -287,24 +405,31 @@ export function OrbitBackdrop({ active, reduced }) {
           }
         }
         ctx.globalAlpha = a;
-        ctx.beginPath();
-        ctx.arc(x, y, star.r, 0, Math.PI * 2);
-        ctx.fill();
+        if (star.r < 0.7) {
+          ctx.fillRect(x - star.r, y - star.r, star.r * 2, star.r * 2);
+        } else {
+          ctx.beginPath();
+          ctx.arc(x, y, star.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
       });
       ctx.globalAlpha = 1;
+
+      if (animated) drawMeteor(time);
 
       const ox = pointer.snx * 8;
       const oy = pointer.sny * 8;
       const light = presence * (0.35 + 0.65 * Math.min(1, pointer.energy));
+      const lightGrad = light > 0.01 ? ringLight(light) : null;
       const theta = animated ? BODY_PARKED + (time / BODY_PERIOD_MS) * Math.PI * 2 : BODY_PARKED;
       const bodyInFront = Math.sin(theta) > 0;
       const targetScale = hoverRef.current ? HOVER_SCALE : 1;
       bodyScale += (targetScale - bodyScale) * (animated ? 0.14 : 1);
 
-      strokeRings(Math.PI, Math.PI * 2, ox, oy, light);
+      strokeRings(Math.PI, Math.PI * 2, ox, oy, lightGrad);
       if (!bodyInFront) drawBody(theta, ox, oy);
       drawPlanet(ox, oy, bodyScale);
-      strokeRings(0, Math.PI, ox, oy, light);
+      strokeRings(0, Math.PI, ox, oy, lightGrad);
       if (bodyInFront) drawBody(theta, ox, oy);
 
       if (interactive) drawPointerOrbit(time);
@@ -348,8 +473,13 @@ export function OrbitBackdrop({ active, reduced }) {
     };
 
     const onResize = () => {
-      resize();
-      if (!running) draw(0);
+      if (resizeFrame) return;
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = 0;
+        resize();
+        // Resizing clears the canvas, so repaint now instead of waiting a frame.
+        draw(performance.now());
+      });
     };
 
     const onVisibility = () => {
@@ -362,7 +492,7 @@ export function OrbitBackdrop({ active, reduced }) {
     };
 
     resize();
-    draw(0);
+    draw(performance.now());
     start();
 
     window.addEventListener('resize', onResize);
@@ -375,6 +505,7 @@ export function OrbitBackdrop({ active, reduced }) {
     return () => {
       pokeRef.current = () => {};
       stop();
+      cancelAnimationFrame(resizeFrame);
       window.removeEventListener('resize', onResize);
       document.removeEventListener('visibilitychange', onVisibility);
       window.removeEventListener('pointermove', onPointerMove);

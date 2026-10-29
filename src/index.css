@@ -728,6 +728,253 @@ html[data-mode="orbit"] .orbit-backdrop {
   scrollbar-color: color-mix(in oklab, var(--ink) 35%, transparent) transparent;
 }
 
+.cockpit-shell {
+  --dawn: #f4d58d;
+}
+
+.deck-project {
+  position: relative;
+}
+
+.deck-project::before {
+  content: "";
+  position: absolute;
+  top: 0.95rem;
+  bottom: 0.95rem;
+  left: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--dawn);
+  opacity: 0;
+  transform: scaleY(0.4);
+  transition:
+    opacity 220ms ease,
+    transform 320ms var(--mode-ease);
+}
+
+.deck-project:hover::before,
+.deck-project:focus-within::before,
+.deck-project.is-open::before {
+  opacity: 0.85;
+  transform: scaleY(1);
+}
+
+.deck-project-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.85rem;
+  align-items: start;
+  width: 100%;
+  padding: 0.95rem 0.6rem 0.95rem 0.9rem;
+  border-radius: 0.75rem;
+  text-align: left;
+  transition: background-color 200ms ease;
+}
+
+.deck-project-head:hover {
+  background: color-mix(in oklab, var(--ink) 4%, transparent);
+}
+
+/* The deck list scrolls, so an outset ring would be clipped at its edges. */
+.deck-project-head.focus-ring:focus-visible {
+  outline-offset: -2px;
+}
+
+.deck-project-body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.deck-project-title {
+  font-size: clamp(1.1rem, 2.4vmin, 1.4rem);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.deck-meta {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  opacity: 0.8;
+}
+
+.deck-experience {
+  padding: 0.95rem 0.6rem 1.05rem 0.9rem;
+}
+
+.deck-experience-org {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.8vmin, 1.85rem);
+  font-weight: 500;
+  line-height: 1.12;
+  color: var(--ink);
+}
+
+.deck-experience .deck-meta {
+  margin: 0.4rem 0 0;
+}
+
+.deck-experience-role {
+  margin: 0.55rem 0 0;
+  font-size: clamp(0.95rem, 2vmin, 1.15rem);
+  font-weight: 500;
+  line-height: 1.12;
+  color: var(--ink);
+}
+
+.deck-experience-note {
+  margin: 0.3rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.deck-project-teaser {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+
+.deck-project.is-open .deck-project-teaser {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: none;
+}
+
+.deck-project-aside {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.15rem;
+  color: var(--ink-muted);
+}
+
+.deck-project-thumb {
+  display: block;
+  width: 52px;
+  height: 52px;
+  flex: none;
+  border-radius: 0.55rem;
+  object-fit: cover;
+  background: #000;
+  outline: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+  outline-offset: -1px;
+  opacity: 0.82;
+  transition: opacity 200ms ease;
+}
+
+.deck-project-head:hover .deck-project-thumb,
+.deck-project.is-open .deck-project-thumb {
+  opacity: 1;
+}
+
+.deck-project-glyph {
+  display: grid;
+  place-items: center;
+  background: color-mix(in oklab, var(--panel) 70%, transparent);
+  color: color-mix(in oklab, var(--dawn) 55%, var(--ink-muted));
+}
+
+.deck-project-chevron {
+  opacity: 0.6;
+  transition: transform 320ms var(--mode-ease);
+}
+
+.deck-project.is-open .deck-project-chevron {
+  transform: rotate(180deg);
+}
+
+.deck-project-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms var(--mode-ease);
+}
+
+.deck-project.is-open .deck-project-panel {
+  grid-template-rows: 1fr;
+}
+
+.deck-project-panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.deck-project-detail {
+  padding: 0.1rem 0.6rem 1.15rem 0.9rem;
+  opacity: 0;
+  transform: translate3d(0, -6px, 0);
+  transition:
+    opacity 200ms ease,
+    transform 300ms var(--mode-ease);
+}
+
+.deck-project.is-open .deck-project-detail {
+  opacity: 1;
+  transform: none;
+  transition-delay: 60ms;
+}
+
+.deck-project .project-preview {
+  aspect-ratio: 16 / 9;
+}
+
+.deck-project-outcome {
+  margin-top: 1rem;
+  padding-left: 0.8rem;
+  border-left: 1px solid color-mix(in oklab, var(--dawn) 60%, transparent);
+}
+
+.deck-project-outcome:first-child {
+  margin-top: 0;
+}
+
+.deck-project-label {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dawn);
+}
+
+.deck-project-link {
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 200ms ease;
+}
+
+.deck-project-link:hover {
+  color: var(--dawn);
+}
+
+@media (max-width: 639px) {
+  .deck-project-head,
+  .deck-experience {
+    column-gap: 0.65rem;
+    padding-inline: 0.75rem 0.25rem;
+  }
+
+  .deck-project-thumb {
+    width: 44px;
+    height: 44px;
+  }
+
+  .deck-project-detail {
+    padding-inline: 0.75rem 0.25rem;
+  }
+}
+
 .view-exit,
 .view-enter,
 .expedition-exit,
@@ -885,5 +1132,16 @@ html[data-mode="orbit"] .orbit-backdrop {
   .view-exit,
   .expedition-exit {
     opacity: 0;
+  }
+
+  .deck-project::before,
+  .deck-project-panel,
+  .deck-project-detail,
+  .deck-project-chevron {
+    transition: none !important;
+  }
+
+  .deck-project-detail {
+    transform: none;
   }
 }
