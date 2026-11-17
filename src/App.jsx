@@ -3,6 +3,7 @@ import { Aurora } from './components/background/Aurora';
 import { Clouds } from './components/background/Clouds';
 import { Nebula } from './components/background/Nebula';
 import { OrbitBackdrop } from './components/background/OrbitBackdrop';
+import { OrbitCursor } from './components/background/OrbitCursor';
 import { SkyBackdrop } from './components/background/SkyBackdrop';
 import { Starfield } from './components/background/Starfield';
 import { SiteHeader } from './components/chrome/SiteHeader';
@@ -32,6 +33,7 @@ function AppShell() {
         <Nebula />
       </div>
       <OrbitBackdrop active={orbitActive} reduced={reduced} />
+      <OrbitCursor active={orbitActive} reduced={reduced} />
       <SiteHeader />
       <ViewStage />
     </>

@@ -653,6 +653,34 @@ html[data-mode="orbit"] .orbit-backdrop {
   outline-offset: 6px;
 }
 
+/* Set for the 880ms the hole takes to swallow the page before notes opens.
+   The transition lives here only, so the cockpit snaps back once it is cleared. */
+html[data-swallow] .cockpit-shell {
+  opacity: 0;
+  transform: scale(0.96);
+  transform-origin: var(--hole-x) var(--hole-y);
+  pointer-events: none;
+  transition:
+    opacity 380ms ease-in,
+    transform 760ms cubic-bezier(0.55, 0, 0.9, 0.5);
+}
+
+/* Gold trail behind the system cursor. Sits above the cockpit and never takes clicks. */
+.orbit-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 70;
+  width: 180px;
+  height: 180px;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.portfolio-handoff .orbit-cursor {
+  display: none;
+}
+
 .mode-toggle {
   position: relative;
   grid-template-columns: 1fr 1fr;
